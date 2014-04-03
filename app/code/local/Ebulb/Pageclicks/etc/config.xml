@@ -1,0 +1,137 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Ebulb_Pageclicks>
+            <version>0.1.1</version>
+        </Ebulb_Pageclicks>
+    </modules>
+    
+    <admin>
+        <routers>
+            <pageclicks>
+                <!-- should be set to "admin" when overloading admin stuff (?) -->
+                <use>admin</use>
+                <args>
+                    <module>Ebulb_Pageclicks</module>
+                    <!-- This is used when "catching" the rewrite above -->
+                    <frontName>pageclicks</frontName>
+                </args>
+            </pageclicks>
+        </routers>
+    </admin>
+    
+    <global>
+         <models> 
+            <pageclicks>
+                <class>Ebulb_Pageclicks_Model</class>
+                <resourceModel>pageclicks_mysql4</resourceModel>
+            </pageclicks>
+            
+            <pageclicks_mysql4>
+                <class>Ebulb_Pageclicks_Model_Mysql4</class>
+                <entities>
+                    <pageclicks> 
+                        <table>page_links</table>
+                    </pageclicks>
+                </entities>    
+            </pageclicks_mysql4>
+        </models>
+        
+        <resources>
+        <pageclicks_setup>
+                <setup>
+                    <module>Ebulb_Pageclicks</module>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+        </pageclicks_setup>
+            <pageclicks_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </pageclicks_write>
+            <pageclicks_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </pageclicks_read>
+        </resources>
+        
+        <blocks>
+            <pageclicks>
+                <class>Ebulb_Pageclicks_Block</class>
+            </pageclicks>
+        </blocks>
+        
+        <helpers>
+            <pageclicks>
+                  <class>Ebulb_Pageclicks_Helper</class>
+            </pageclicks>
+        </helpers>
+    </global>
+    
+    <adminhtml>
+        <menu>
+            <cms module="pageclicks">
+                <children>
+                    <pageclicks translate="title" module="pageclicks">
+                        <title>Manage Homepage Links</title>
+                        <sort_order>601</sort_order>
+                        <action>pageclicks/adminhtml_pageclicks</action>
+                        <!--    <children>
+                                <items1 module="productgroup">
+                                    <title>Manage Groups</title>
+                                    <sort_order>0</sort_order>
+                                    <action>productgroup/adminhtml_productgroup</action> 
+                                </items1> 
+                                <items2 module="productgroup">
+                                    <title>Manage Group Products</title>
+                                    <sort_order>1</sort_order>
+                                    <action>productgroup/adminhtml_productgroup</action> 
+                                </items2>  
+                            </children>  -->
+                    </pageclicks>
+                </children>    
+            </cms>    
+        </menu>
+        <!--<acl>
+            <resources>
+                <all>
+                    <title>Allow Everything</title>
+                </all>
+                <admin>
+                    <children>
+                        <catalog>
+                            <children>     
+                                <pageclicks>
+                                    <title>Product Group Module</title>
+                                    <sort_order>10</sort_order>
+                                </pageclicks>
+                            </children>
+                        </catalog> 
+                    </children>
+                </admin>
+            </resources>
+        </acl> -->
+        <layout>
+            <updates>
+                <pageclicks>
+                    <file>pageclicks.xml</file>
+                </pageclicks>
+            </updates>
+        </layout>
+    </adminhtml>
+    
+    <frontend>
+        <routers>
+            <Ebulb_Pageclicks>
+                <use>standard</use>
+                <args>
+                    <module>Ebulb_Pageclicks</module>
+                    <frontName>pageclicks</frontName>
+                </args>
+            </Ebulb_Pageclicks>
+        </routers>
+    </frontend>
+</config> 

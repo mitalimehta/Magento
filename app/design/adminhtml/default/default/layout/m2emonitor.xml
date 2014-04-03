@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <m2emonitor_adminhtml_ebaymonitor_index>
+        <reference name="content">
+            <block type="m2emonitor/adminhtml_m2emonitor" name="m2emonitor" />
+        </reference>
+    </m2emonitor_adminhtml_ebaymonitor_index>
+</layout>

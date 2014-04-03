@@ -1,0 +1,8 @@
+<?xml version="1.0"?> 
+<layout>
+      <customsearch_adminhtml_searchattribute_index> 
+            <reference name="content">
+                <block type="customsearch/adminhtml_searchattribute" name="customsearch_searchattribute" />
+            </reference> 
+     </customsearch_adminhtml_searchattribute_index>
+</layout>

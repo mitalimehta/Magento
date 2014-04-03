@@ -1,0 +1,182 @@
+
+<div class="content-header">
+    <table cellspacing="0" class="grid-header">
+        <tr>
+            <td><h3><?php echo $this->__('Create Receipt for Purchase Order #').$this->getOrder()->getIncrementId()?></h3></td>
+            <td align="right">
+                <button onclick="document.location.href='<?php echo $this->getBackUrl()?>'" class="scalable back" type="button"><span><?php echo $this->__('Back')?></span></button>
+                <button onclick="document.getElementById('edit_form').submit();" class="scalable save" type="button"><span><?php echo $this->__('Save')?></span></button>
+            </td>
+        </tr>
+    </table>
+</div>
+
+
+
+<style>
+.lien-popup span
+{                                   
+    position       :  absolute;
+    top            :  -2000em;
+    left           :  -2000em;
+    width          :  1px;
+    height         :  1px;
+    overflow       :  hidden; 
+    background     :  #ffffe1;   /* Définition du fond, sinon on a le même que notre lien */
+    border         :  1px solid #000000; /* Définition des bordures */
+    text-decoration: none;
+    color: black;
+    text-align: left;
+}  
+
+
+.lien-popup:hover span
+{                                   
+    top        :  auto;
+    left       :  auto;
+    width      :  200px;
+    height     :  auto;
+    overflow   :  visible;
+}  
+
+</style>
+
+
+
+
+<form method="post" id="edit_form" name="edit_form" action="<?php echo $this->getUrl('*/*/create')?>" >
+
+<div class="box-left">
+    <!--Order Information-->
+    <div class="entry-edit">
+<fieldset id="my-fieldset">
+        <div class="entry-edit-head">
+            <a href=""><?php echo Mage::helper('purchase')->__('Order # %s', $this->getOrder()->getIncrementId()) ?></a>
+        </div>
+        <div class="fieldset">
+            <table cellspacing="0" class="form-list">
+            <tr>
+                <td class="label"><label><?php echo Mage::helper('purchase')->__('Package Number') ?></label></td>
+                <td class="value"><input size="25" type="text" id="receipt_packagenumber" name="receipt_packagenumber" value="" ><p class="required">* Required Fields</p></td>
+            </tr>
+            
+            </table>
+        </div>
+        </fieldset> 
+    </div>
+</div>
+<div class="box-right">
+    <!--Invoice Information-->
+    
+    
+    <?php 
+    
+    $currentInvoice = $this->getInvoice();  ?>
+    <div class="entry-edit">
+    <fieldset id="my-fieldset"> 
+        <div class="entry-edit-head">
+            <h4 class="icon-head head-account"><?php echo Mage::helper('purchase')->__('Invoice Information') ?></h4>
+            <div class="tools"><?php echo $this->getAccountEditLink()?></div>
+        </div>
+        <div class="fieldset">
+            <div class="hor-scroll">
+                <table cellspacing="0" class="form-list">
+                <tr>
+                    <td class="label"><label><?php echo Mage::helper('purchase')->__('Invoice Number') ?></label></td>
+                    <td class="value">
+<input type="hidden" id="purchase_invoice_id" name="purchase_invoice_id" value="<?php echo ($currentInvoice!= null)? $currentInvoice->getId():''?>" >
+
+                        <input size="25" type="text" id="purchase_invoice_number" name="purchase_invoice_number" value="<?php echo ($currentInvoice!= null)? $currentInvoice->getIncrementId():''?>"  ></td>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="label"><label><?php echo Mage::helper('purchase')->__('Shipping Fee') ?></label></td>
+                    <td class="value">
+                        <input size="25" type="text" id="purchase_invoice_shipping_fee" name="purchase_invoice_shipping_fee" value="<?php echo ($currentInvoice!= null)? $currentInvoice->getShippingPrice(): ''; ?>" ></td>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="label"><label><?php echo Mage::helper('purchase')->__('Toll') ?></label></td>
+                    <td class="value">
+                        <input size="25" type="text" id="purchase_invoice_toll" name="purchase_invoice_toll" value="<?php echo ($currentInvoice!= null)? $currentInvoice->getAdjustFee():'';?>" ></td>
+                    </td>
+                </tr>
+                                
+                </table>
+            </div>
+        </div>
+        </fieldset> 
+    </div>
+</div>
+<div class="clear"></div>
+
+<div class="entry-edit">
+<fieldset id="my-fieldset"> 
+<input name="form_key" id="form_key" type="hidden" value="<?php echo $this->getFormKey() ?>" >
+<input type="hidden" id="po_order_id" name="po_order_id" value="<?php echo $this->getOrder()->getId(); ?>">
+    
+        <div class="grid">
+            <table cellspacing="0" class="data" width="100%" cellspacing="0">
+                <thead>
+                    <tr class="headings">
+                        <th class="a-center">Picture</th>
+                        <th class="a-center">Infos</th>
+                        <th class="a-center">Sku</th>
+                        <th class="a-center"><?php echo$this->__('Vendor Ref #')?></th>
+                        <th>Description</th>
+                        <th class="a-center"><?php echo$this->__('Ordered Qty')?></th>
+                        <th class="a-center"><?php echo$this->__('Received Qty')?></th>
+                        <th class="a-center"><?php echo$this->__('Delivered Qty')?></th>
+                    </tr>
+               </thead>   
+               <tbody>
+                    <?php
+
+                        //Affiche la liste des lignres commande
+                        $collection = $this->getProducts();
+                        if (sizeof($collection) == 0)
+                        {
+                            echo '<tr><td colspan="13" align="center">'.$this->__('No items').'</td></tr>';
+                        }
+                        
+                        foreach ($collection as $item)
+                        {
+                            $venderProduct = Mage::getModel("purchase/vendorproduct")->loadByProductId($this->getOrder()->getVendorId() , $item->getProductId() );
+                          
+                            echo '<tr>';
+                            $product = Mage::getModel('catalog/product')->load($item->getProductId());
+
+                            $productImage = Mage::getBaseUrl('media').'catalog/product'.$product->getsmall_image(); //mage::helper('catalog/image')->init($product, 'small_image')->resize(50, 50);
+                            echo '<td><img src="'.$productImage.'" width="50" height="50"></td>';
+                            echo '<td align="center">';
+
+                            echo '<a href="#" class="lien-popup">';
+                            echo '<img src="'.$this->getSkinUrl('images/note_msg_icon.gif').'">';
+                            echo '</a>';
+                            echo '</td>';
+                          
+                            echo '<td><a href="'.$this->getUrl('purchase/adminhtml_inventory/edit/',
+                            
+array('id'=>$item->getProductId(),"ReturnUrl"=>base64_encode($this->helper('core/url')->getCurrentUrl()))).'/">'.$item->getSku().'</a></td>';
+                            
+                            echo '<td align="center">'.$venderProduct->getVendorSku().'</td>';
+                            
+                            echo '<td><input type="hidden" id="product_id_'.$item->getId().'" name="product_id_'.$item->getId().'" value="'.$item->getProductId().'">'.$item->getProductName().'></td>';
+                            echo '<td align="center">'.$item->getProductQty().'</td>';
+                            echo '<td align="right">'.$item->getQtyReceipted().'</td>';
+                            echo '<td align="center"><input size="8" type="text" id="product_delivered_qty_'.$item->getId().'" name="product_delivered_qty_'.$item->getId().'" value="0" ></td>';
+
+                            echo '</tr>';
+                        }
+                    ?>
+                </tbody>
+            </table>
+        </div>
+</fieldset> 
+</div>
+
+</form>
+<script type="text/javascript">
+    editForm = new varienForm('edit_form', '');
+</script>
+

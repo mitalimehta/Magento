@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <m2etemplates_adminhtml_m2etemplates_index>
+        <reference name="content">
+            <block type="m2etemplates/adminhtml_m2etemplates" name="m2etemplates" />
+        </reference>
+    </m2etemplates_adminhtml_m2etemplates_index>
+    <m2etemplates_adminhtml_m2epricetemplates_index>
+        <reference name="content">
+            <block type="m2etemplates/adminhtml_m2epricetemplates" name="m2epricetemplates" />
+        </reference>
+    </m2etemplates_adminhtml_m2epricetemplates_index>
+    
+</layout>

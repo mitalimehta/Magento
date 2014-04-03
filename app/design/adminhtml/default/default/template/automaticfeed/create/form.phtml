@@ -1,0 +1,137 @@
+<?php 
+
+$company = Mage::getModel('automaticfeed/company'); 
+$companycollection = $company->getCollection(); 
+
+$stores  = Mage::getSingleton('adminhtml/system_store')->getWebsiteOptionHash();
+
+?>
+<div class="entry-edit">
+<form action="<?php echo $this->getSaveUrl(); ?>" id="edit_form" name="edit_form" method="post" enctype="multipart/form-data" >
+<input name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>" />   
+<div class="entry-edit">
+        <div class="entry-edit-head">
+            <h4 class="icon-head head-edit-form fieldset-legend">Create New Feeds</h4>
+            <div class="form-buttons"></div>
+        </div>
+        <div class="fieldset " id="_vendoredit_form1">
+            <div class="hor-scroll">
+                <table class="form-list" cellspacing="0">
+                    <tbody>
+                        <tr>
+                            <td class="label" colspan="2">  
+                                <div id="messages_div" style="display: none;">
+                                    <ul class="messages">
+                                        <li class="success-msg" id="response_div">
+                                        </li>
+                                    </ul>                                                    
+                                </div>    
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="label"><label for="_vendorvendor_name">Shopping Company<span class="required">*</span></label></td>
+                            <td class="value">
+                                
+                                <select name="company_list[]" id="company_list" multiple="multiple" size="10">
+                                    <option value="all">All Companies</option> 
+                                <?php foreach($companycollection as $company){  ?> 
+                                    <option value="<?php echo $company['company_id']; ?>"><?php echo $company['company_name']; ?></option>  
+                                <?php } ?>
+                                </select>
+                                
+                            </td>
+                        </tr>  
+                        <tr>
+                            <td class="label"><label for="_vendorvendor_name">Website<span class="required">*</span></label></td>
+                            <td class="value">
+                            
+                                <select name="website_list[]" id="website_list" multiple="multiple" size="10">
+                                    <option value="all">All Websites</option> 
+                                    <?php foreach($stores as $store_id=>$storename){  ?> 
+                                        <option value="<?php echo $store_id; ?>"><?php echo $storename; ?></option>  
+                                    <?php } ?> 
+                                </select>            
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <td class="label"></td>
+                            <td class="value">
+                                <button type="button" class="scalable add" onclick="createfeeds();";><span>Create</span></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</form>
+</div>  
+<div id="loading-mask1" style="display: none;">
+    <p class="loader" id="loading_mask_loader1"><img src="<?php echo $this->getSkinUrl('images/ajax-loader-tr.gif') ?>" alt="<?php echo Mage::helper('adminhtml')->__('Loading...') ?>"/><br/><?php echo Mage::helper('adminhtml')->__('Please wait...') ?></p>
+</div> 
+<script type="text/javascript" language="javascript">
+function createfeeds()
+{
+    var loadingdiv = document.getElementById('loading-mask1');   
+    loadingdiv.style.display = "";  
+   
+    var companylistArray = new Array();
+    var company_list = document.getElementById('company_list');
+    
+    var i;
+    var count = 0;
+    
+    for (i=0; i<company_list.options.length; i++) {
+        if (company_list.options[i].selected) {
+          companylistArray[count] = company_list.options[i].value;
+          count++;
+        }
+    }
+      
+    var websitelistArray = new Array();
+    var website_list = document.getElementById('website_list');
+    
+    var i;
+    var count = 0;
+    
+    for (i=0; i<website_list.options.length; i++) {
+        if (website_list.options[i].selected) {
+          websitelistArray[count] = website_list.options[i].value;
+          count++;
+        }
+    }
+    
+    if(companylistArray == ''){
+        alert('please select Shopping Company');
+        loadingdiv.style.display = "none";     
+        return false;
+    }
+    
+    if(websitelistArray == ''){
+        alert('please select Website');   
+        loadingdiv.style.display = "none";     
+        return false;
+    } 
+    
+    url = "<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB); ?>automaticfeed/adminhtml_create/createfeed/companylist/"+companylistArray+"/websitelist/"+websitelistArray;
+    
+    var request = new Ajax.Request(
+        url,
+        {
+            method:'POST',
+            onSuccess: function onSuccess(transport)
+            {  
+                document.getElementById("messages_div").style.display = "";  
+                document.getElementById("response_div").innerHTML = transport.responseText;   
+            },
+            onFailure: function onFailure() 
+            {
+                alert('error');
+            },
+        }
+    ); 
+    
+    loadingdiv.style.display = "none"; 
+}
+</script>

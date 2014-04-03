@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <pageclicks_adminhtml_pageclicks_index>
+        <reference name="content">
+            <block type="pageclicks/adminhtml_pageclicks" name="pageclicks" />
+        </reference>
+    </pageclicks_adminhtml_pageclicks_index>
+</layout>

@@ -1,0 +1,433 @@
+<script>
+
+    var productLinksController = Class.create();
+
+    productLinksController.prototype = {
+        initialize : function(fieldId, products, grid) {
+            this.saveField = $(fieldId);
+            this.saveFieldId = fieldId;
+            this.products    = $H(products);
+            this.grid        = grid;
+            this.tabIndex    = 1000;
+            this.grid.rowClickCallback = this.rowClick.bind(this);
+            this.grid.initRowCallback = this.rowInit.bind(this);
+            this.grid.checkboxCheckCallback = this.registerProduct.bind(this);
+            this.grid.rows.each(this.eachRow.bind(this));
+            this.saveField.value = this.serializeObject(this.products);
+            this.grid.reloadParams = {'products[]':this.products.keys()};
+        },
+        eachRow : function(row) {
+            this.rowInit(this.grid, row);
+        },
+        registerProduct : function(grid, element, checked) {
+            if(checked){
+                if(element.inputElements) {
+                    this.products.set(element.value, {});
+                    for(var i = 0; i < element.inputElements.length; i++) {
+                        element.inputElements[i].disabled = false;
+                        this.products.get(element.value)[element.inputElements[i].name] = element.inputElements[i].value;
+                    }
+                }
+            }
+            else{
+                if(element.inputElements){
+                    for(var i = 0; i < element.inputElements.length; i++) {
+                        element.inputElements[i].disabled = true;
+                    }
+                }
+
+                this.products.unset(element.value);
+            }
+            this.saveField.value = this.serializeObject(this.products);
+            this.grid.reloadParams = {'products[]':this.products.keys()};
+        },
+        serializeObject : function(hash) {
+            var clone = hash.clone();
+            clone.each(function(pair) {
+                clone.set(pair.key, encode_base64(Object.toQueryString(pair.value)));
+            });
+            return clone.toQueryString();
+        },
+        rowClick : function(grid, event) {
+            var trElement = Event.findElement(event, 'tr');
+            var isInput   = Event.element(event).tagName == 'INPUT';
+            if(trElement){
+                var checkbox = Element.select(trElement, 'input');
+                if(checkbox[0]){
+                    var checked = isInput ? checkbox[0].checked : !checkbox[0].checked;
+                    this.grid.setCheckboxChecked(checkbox[0], checked);
+                }
+            }
+        },
+        inputChange : function(event) {
+            var element = Event.element(event);
+            if(element && element.checkboxElement && element.checkboxElement.checked){
+                this.products.get(element.checkboxElement.value)[element.name] = element.value;
+                this.saveField.value = this.serializeObject(this.products);
+            }
+        },
+        rowInit : function(grid, row) {
+            var checkbox = $(row).select('.checkbox')[0];
+            var inputs = $(row).select('.input-text');
+            if(checkbox && inputs.length > 0) {
+                checkbox.inputElements = inputs;
+                for(var i = 0; i < inputs.length; i++) {
+                    inputs[i].checkboxElement = checkbox;
+                    if(this.products.get(checkbox.value) && this.products.get(checkbox.value)[inputs[i].name]) {
+                        inputs[i].value = this.products.get(checkbox.value)[inputs[i].name];
+                    }
+                    inputs[i].disabled = !checkbox.checked;
+                    inputs[i].tabIndex = this.tabIndex++;
+                    Event.observe(inputs[i],'keyup', this.inputChange.bind(this));
+                    Event.observe(inputs[i],'change', this.inputChange.bind(this));
+                }
+            }
+        }
+    };
+
+    //***********************************************************************************************************************
+function SubmitOrderForm()
+{
+    //Verifie que tous les produits aient un prix
+    var already_alerted;
+    already_alerted = false;
+    var t_input = document.getElementsByTagName('input');
+    for (var i = 0 ; i < t_input.length ; i ++)
+    {
+        if ((t_input[i].id.indexOf('pop_price_ht_') > -1) && (already_alerted == false))
+        {
+            if (t_input[i].value == 0)
+            {
+                if (!confirm('<?php echo $this->__('Some products buy price are not set'); ?>'))
+                    return false;                
+                else
+                    already_alerted = true;
+            }
+        }
+    }
+    
+    //Si case sent coch�, il faut qu'il y ait une date de livraison
+    if (document.getElementById('po_sent').checked)
+    {
+        var date_delivery = '';
+        date_delivery = document.getElementById('po_supply_date').value;
+        if ((date_delivery == '') || (date_delivery == '0000-00-00'))
+        {
+            alert('<?php echo $this->__('Please fill delivery date field')?>');
+            return;
+        }
+    }
+    
+    document.getElementById('edit_form').submit();
+}
+
+
+function getShippingAddress(type,so_num)
+{
+    
+    document.getElementById( "po_shipping_" + type ).checked = true;
+    document.getElementById("valid_so_num").style.display = "none";
+    document.getElementById("invalid_so_num").style.display = "none";
+    var url = getAdminUrl() + 'purchase/orders/getShippingAddress/';
+    var request = new Ajax.Request(
+            url,
+            {
+                method:'POST',
+                onSuccess: function onSuccess(transport)
+                            {
+                                elementValues = eval('(' + transport.responseText + ')');
+                                if(elementValues["error"]==false)
+                                {
+                                   document.getElementById("shipping_name").value       = elementValues["name"];
+                                   document.getElementById("shipping_company").value    = elementValues["company"];
+                                   document.getElementById("shipping_street1").value     = elementValues["street"];
+                                   document.getElementById("shipping_street2").value     = elementValues["street2"];
+                                   document.getElementById("shipping_city").value       = elementValues["city"];
+                                   document.getElementById("shipping_state").value   = elementValues["region"];
+                                   document.getElementById("shipping_zipcode").value   = elementValues["postcode"];
+                                   document.getElementById("shipping_country").value    = elementValues["country"];
+                                   document.getElementById("shipping_telephone1").value = elementValues["telephone1"];
+                                   document.getElementById("shipping_telephone2").value = elementValues["telephone2"];
+                                   document.getElementById("shipping_fax").value        = elementValues["fax"];
+                                   document.getElementById("shipping_email").value      = elementValues["email"];
+                                }
+                                else if(elementValues["message"])
+                                {
+                                    if(elementValues["message"]=="SO")
+                                       document.getElementById("invalid_so_num").style.display = "block";
+                                    else
+                                       alert(elementValues["message"]);
+                                }
+                            },
+                onFailure: function onFailure() 
+                            {
+                                alert('error');
+                            },
+                parameters : {'po_shipping_type': type, 'po_so_num': so_num, 'po_num': '<?php echo $this->getOrder()->getId(); ?>' }
+            }
+        );
+    
+}
+
+
+function checkOrderId(so_num)
+{
+    
+    document.getElementById("valid_so_num").style.display = "none";
+    document.getElementById("invalid_so_num").style.display = "none";
+    if (so_num.length <9 ){
+        return;
+    }
+    var url = getAdminUrl() + 'purchase/orders/checkOrderId/';
+    var request = new Ajax.Request(
+            url,
+            {
+                method:'POST',
+                onSuccess: function onSuccess(transport)
+                            {
+                                elementValues = eval('(' + transport.responseText + ')');
+                                
+                                if(elementValues["error"]==""){
+                                    return false;
+                                }
+                                
+                                if(elementValues["error"]=="true")
+                                {
+                                    document.getElementById("invalid_so_num").style.display = "block";
+                                    return false;
+                                }   
+                                
+                                if(elementValues["error"]=="false")
+                                {
+                                    getShippingAddress("so",so_num);
+                                    document.getElementById("valid_so_num").style.display = "block";
+                                    return false;
+                                }
+                            },
+                onFailure: function onFailure() 
+                            {
+                                alert('error');
+                            },
+                parameters : {'po_so_num': so_num}
+            }
+        );
+    
+}
+
+</script>  
+
+
+
+<input name="form_key" id="form_key" type="hidden" value="<?php echo $this->getFormKey() ?>" />
+<input type="hidden" id="po_order_id" name="po_order_id" value="<?php echo $this->getOrder()->getOrderId(); ?>">
+
+<div class="entry-edit">
+    
+        <div class="entry-edit-head"> 
+            <h4 class="icon-head head-edit-form fieldset-legend">General</h4> 
+        </div>
+        <fieldset id="my-fieldset">
+            <table cellspacing="0" width="100%" class="form-list">
+                
+                <tr>
+                    <td class="label" width="24%"><?php echo $this->__('Vendor'); ?></td>
+                    <td class="input-ele"  width="27%" >
+                        <input type="hidden" id="order_id" name="order_id" value="<?php echo $this->getOrder()->getOrderId(); ?>" >
+                        <input type="hidden" id="vendor_id" name="vendor_id" value="<?php echo $this->getOrder()->getVendorId(); ?>" >
+                        <h3><b><?php echo $this->getVendor()->getVendorName() ?></b></h3>
+                     </td>
+                     <td  width="3%">&nbsp;</td>
+                     <td  width="24%">Status</td>
+                    <td  width="22%"><?php echo  $this->getOrder()->getStatus(); ?></td>
+                </tr>
+                
+                <tr>
+                    <td class="label" width="24%" >Store</td>
+                    <td class="input-ele" width="27%" ><?php echo $this->getStoresAsCombo('store_id', $this->getOrder()->getStoreId()); ?></td>
+                    <td  width="3%">&nbsp;</td>
+                    <td class="label" width="24%"><?php echo $this->__('Currency'); ?></td>
+                    <td class="input-ele" width="22%">$</td>
+                </tr>
+                
+                <tr>
+                    <td class="label" width="24%" ><?php echo $this->__('Payment Terms'); ?></td>
+                    <td class="input-ele" width="27%" ><?php echo $this->getPaymentTermsAsCombo('payment_term_id', $this->getOrder()->getPaymentTerms()); ?></td>
+                    <td  width="3%">&nbsp;</td>
+                    <td class="label" width="24%"><?php echo $this->__('Shipping Method'); ?></td>
+                    <td class="input-ele" width="22%"><?php echo $this->getShippingMethodsAsCombo('shipping_method_id', $this->getOrder()->getShippingMethod()); ?></td>
+                </tr>
+                
+                <tr>
+                    <td class="label" width="24%" ><?php echo $this->__('Comments'); ?></td>
+                    <td class="input-ele" ><textarea id="comments" name="comments" cols="50" rows="4"><?php echo $this->getOrder()->getComments(); ?></textarea></td>
+                    <td  width="3%">&nbsp;</td> 
+                    <td class="label"><?php echo $this->__('Order ETA'); ?>
+                    <br /> <br /><?php echo $this->__('Created Date'); ?> 
+                    <br /> <br /><?php echo $this->__('Cancel Date'); ?> 
+                    </td>
+                    <td class="input-ele">
+                        <input size="24" type="text" id="order_eta" name="order_eta" value="<?php echo $this->getOrder()->getOrderEta(); ?>">
+                        <img src="<?php echo $this->getSkinUrl('images/purchase/grid-cal.gif') ?>" class="v-middle" id="img_calendar_date" />
+                        <script type="text/javascript">
+                            Calendar.setup({
+                                inputField : 'order_eta',
+                                ifFormat : '%Y-%m-%e',
+                                button : 'img_calendar_date',
+                                align : 'Bl',
+                                singleClick : true
+                            });
+                        </script>    
+                    <br /> <br /><?php echo $this->getOrder()->getCreatedDate(); ?>
+                    <br /> <br /><?php echo $this->getOrder()->getCancelDate(); ?>
+                    </td>                                        
+                </tr>
+
+            </table>
+        </fieldset>
+
+
+
+
+       <div class="entry-edit-head"> 
+            <h4 class="icon-head head-edit-form fieldset-legend">Shipping address</h4> 
+        </div>
+        
+        <fieldset id="my-fieldset1">
+            <table cellspacing="0" width="100%" class="form-list" >
+            <tr>
+            <td>
+            <table cellspacing="0" width="50%" class="form-list">
+                <tr>
+                    <td class="label" width="24%">Contact person:</td>
+                    <td class="input-ele"><input size="50" type="text" id="shipping_name" name="shipping_name" value="<?php echo $this->getOrder()->getShippingName(); ?>"></td> 
+                  </td>
+                </tr>
+                
+                <tr>
+                    <td class="label" width="24%">Company:</td>
+                    <td class="input-ele"><input size="50" type="text" id="shipping_company" name="shipping_company" value="<?php echo $this->getOrder()->getShippingCompany(); ?>"></td> 
+                  </td>
+                </tr>
+
+                <tr>
+                    <td class="label" width="24%">Street Line 1:</td>
+                    <td class="input-ele"><input size="50" type="text" id="shipping_street1" name="shipping_street1" value="<?php echo $this->getOrder()->getShippingStreet1(); ?>"></td>
+                  </td>
+                </tr>
+                <tr>
+                    <td class="label" width="24%">Street Line 2:</td>
+                    <td class="input-ele"><input size="50" type="text" id="shipping_street2" name="shipping_street2" value="<?php echo $this->getOrder()->getShippingStreet2(); ?>"></td>
+                  </td>
+                </tr>                
+                  <tr>
+                    <td class="label" width="24%">City:</td>
+                    <td class="input-ele"><input size="25" type="text" id="shipping_city" name="shipping_city" value="<?php echo $this->getOrder()->getShippingCity(); ?>"></td>
+                  </td>
+                </tr>
+                  <tr>
+                    <td class="label" width="24%">State:</td>
+                    <td class="input-ele"><input size="25" type="text" id="shipping_state" name="shipping_state" value="<?php echo $this->getOrder()->getShippingState(); ?>"></td>
+                  </td>
+                </tr>
+                  <tr>
+                    <td class="label" width="24%">Postal code:</td>
+                    <td class="input-ele"><input size="25" type="text" id="shipping_zipcode" name="shipping_zipcode" value="<?php echo $this->getOrder()->getShippingZipcode(); ?>"></td>
+                  </td>
+                </tr>
+                
+                  <tr>
+                    <td class="label" width="24%">Country:</td>
+                    <td class="input-ele"><input size="25" type="text" id="shipping_country" name="shipping_country" value="<?php echo $this->getOrder()->getShippingCountry(); ?>"></td>
+                  </td>
+                </tr>
+                
+                  <tr>
+                    <td class="label" width="24%">Telephone 1:</td>
+                    <td class="input-ele"><input size="25" type="text" id="shipping_telephone1" name="shipping_telephone1" value="<?php echo $this->getOrder()->getShippingTelephone1(); ?>"></td>
+                  </td>
+                </tr>
+                
+                  <tr>
+                    <td class="label" width="24%">Telephone 2:</td>
+                    <td class="input-ele"><input size="25" type="text" id="shipping_telephone2" name="shipping_telephone2" value="<?php echo $this->getOrder()->getShippingTelephone2(); ?>"></td>
+                  </td>
+                </tr>
+                
+                  <tr>
+                    <td class="label" width="24%">Fax:</td>
+                    <td class="input-ele"><input size="25" type="text" id="shipping_fax" name="shipping_fax" value="<?php echo $this->getOrder()->getShippingFax(); ?>"></td>
+                  </td>
+                </tr>
+                
+                <tr>
+                    <td class="label" width="24%">Email:</td>
+                    <td class="input-ele"><input size="25" type="text" id="shipping_email" name="shipping_email" value="<?php echo $this->getOrder()->getShippingEmail(); ?>"></td>
+                  </td>
+                </tr>
+                
+            </table>
+            </td>
+            <td width="50%" align="center">
+                 <table>  
+                     <tr>
+                         <td>
+                         <div class="entry-edit">
+                         
+                         <div class="entry-edit-head"> 
+                         <h4 class="icon-head head-edit-form fieldset-legend">Load address from: </h4></div>
+                         <fieldset id="my-fieldset2">
+                         <input type="radio" name="po_shipping_type" value="default1" id="po_shipping_default1" onclick="getShippingAddress('default1','')"> <?php echo Mage::getStoreConfig("purchase/shipping_information1/company");?> <br /><br />
+                         <input type="radio" name="po_shipping_type" value="default2" id="po_shipping_default2" onclick="getShippingAddress('default2','')"> <?php echo Mage::getStoreConfig("purchase/shipping_information2/company");?> <br /><br />
+                         <input type="radio" name="po_shipping_type" value="so" id="po_shipping_so" onclick="getShippingAddress('so',document.getElementById('po_shipping_so_num').value)"> SO Number # <input size="14" type="text" id="po_shipping_so_num" name="po_shipping_so_num" value="<?php echo $this->getOrder()->getShippingSalesOrderId(); ?>" onkeyup="checkOrderId(this.value)" onclick="getShippingAddress('so',document.getElementById('po_shipping_so_num').value)" ><br />
+                         <div style="display: none; color: red;" id="invalid_so_num" >Invalid sales order number</div><div style="display: none; color: green;" id="valid_so_num" ><b>Sales order shipping address loaded</b></div><br />
+                         <input type="radio" name="po_shipping_type" value="other" id="po_shipping_other" onclick="getShippingAddress('other','')"> Other
+                         </fieldset>
+                         </div>
+                         <script>
+                         
+                         document.getElementById( "po_shipping_<?php echo $this->getOrder()->getShippingType()?$this->getOrder()->getShippingType():'other'; ?>" ).checked = true;
+                         
+                         </script>
+                        </td>
+                    </tr>
+                    
+                 </table>                                                                                                 
+            </td>
+            </tr>
+            </table>
+        </fieldset>
+
+</div>
+
+<div align="right">
+<table border="0">
+<tr>
+    <td><h3><?php echo $this->__('Subtotal'); ?>&nbsp;&nbsp;&nbsp;</h3></td>
+    <td width="100" align="right"><h3><?php echo $this->getOrder()->getCurrency()->formatTxt($this->getOrder()->getSubtotal()) ?></h3></td>
+</tr>
+<tr>
+    <td><h3><?php echo $this->__('Shipping fee'); ?>&nbsp;&nbsp;&nbsp;</h3></td>
+    <td width="100" align="right"><h3><?php echo $this->getOrder()->getCurrency()->formatTxt($this->getOrder()->getShippingPrice()) ?></h3></td>
+</tr>
+<tr>
+    <td><h3><?php echo $this->__('Toll'); ?>&nbsp;&nbsp;&nbsp;</h3></td>
+    <td width="100" align="right"><h3><?php echo $this->getOrder()->getCurrency()->formatTxt($this->getOrder()->getAdjustFee()) ?></h3></td>
+</tr>
+<tr>
+    <td><h3><?php echo $this->__('Total'); ?>&nbsp;&nbsp;&nbsp;</h3></td>
+    <td width="100" align="right"><h3><?php echo $this->getOrder()->getCurrency()->formatTxt($this->getOrder()->getTotal()) ?></h3></td>
+</tr>
+</table>
+</div>
+<script type="text/javascript"> 
+function stopRKey(evt) { 
+  var evt = (evt) ? evt : ((event) ? event : null); 
+  var node = (evt.target) ? evt.target : ((evt.srcElement) ? evt.srcElement : null); 
+  if ((evt.keyCode == 13) && (node.type=="text"))  {return false;} 
+} 
+
+document.onkeypress = stopRKey; 
+
+</script>
+
+

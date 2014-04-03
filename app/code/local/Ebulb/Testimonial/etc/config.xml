@@ -1,0 +1,154 @@
+<?xml version="1.0"?>
+<!-- 
+/**
+ * @category   Ebulb
+ * @package    Ebulb_Testimonial
+ * @author     ModuleCreator
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
+ -->
+<config>
+    <modules>
+        <Ebulb_Testimonial>
+            <version>0.1.0</version>
+        </Ebulb_Testimonial>
+    </modules>
+    <frontend>
+        <routers>
+            <testimonial>
+                <use>standard</use>
+                <args>
+                    <module>Ebulb_Testimonial</module>
+                    <frontName>testimonial</frontName>
+                </args>
+            </testimonial>
+        </routers>
+        <layout>
+            <updates>
+                <testimonial>
+                    <file>testimonial.xml</file>
+                </testimonial>
+            </updates>
+        </layout>
+        <testimonial>
+			<per_page_values>5,10,20,50</per_page_values>
+		</testimonial>
+		<translate>
+            <modules>
+                <Ebulb_Testimonial>
+                    <files>
+                        <default>Ebulb_Testimonial.csv</default>
+                    </files>
+                </Ebulb_Testimonial>
+            </modules>
+        </translate>
+    </frontend>
+    <admin>
+        <routers>
+			<testimonial>
+				<use>admin</use>
+				<args>
+					<module>Ebulb_Testimonial</module>
+					<frontName>testimonial</frontName>
+				</args>
+			</testimonial>
+        </routers>
+    </admin>
+    <adminhtml>
+		<menu>
+			<testimonial module="testimonial">
+				<title>Testimonial</title>
+				<sort_order>71</sort_order>               
+				<children>
+					<items module="testimonial">
+						<title>View Testimonials</title>
+						<sort_order>0</sort_order>
+						<action>testimonial/adminhtml_testimonial</action>
+					</items>
+				</children>
+			</testimonial>
+		</menu>
+		<acl>
+			<resources>
+				<all>
+					<title>Allow Everything</title>
+				</all>
+				<admin>
+					<children>
+						<testimonial>
+							<title>Testimonial Module</title>
+							<sort_order>10</sort_order>
+                            <children>
+                                <items tralslate="title">
+                                    <title>View Testimonials</title>
+                                    <sort_order>0</sort_order>
+                                </items>
+                                <edittestimonial tralslate="title">
+                                    <title>Edit Testimonials</title>
+                                    <sort_order>1</sort_order>
+                                </edittestimonial>
+                                <!--<deletetestimonial tralslate="title">
+                                    <title>Delete Testimonials</title>
+                                    <sort_order>2</sort_order>
+                                </deletetestimonial>-->
+                            </children>
+						</testimonial>
+					</children>
+				</admin>
+			</resources>
+		</acl>
+		<layout>
+			<updates>
+				<testimonial>
+					<file>testimonial.xml</file>
+				</testimonial>
+			</updates>
+		</layout>
+    </adminhtml>   
+    <global>
+        <models>
+            <testimonial>
+                <class>Ebulb_Testimonial_Model</class>
+                <resourceModel>testimonial_mysql4</resourceModel>
+            </testimonial>
+            <testimonial_mysql4>
+                <class>Ebulb_Testimonial_Model_Mysql4</class>
+                <entities>
+                    <testimonial>
+                        <table>testimonial</table>
+                    </testimonial>
+                </entities>
+            </testimonial_mysql4>
+        </models>
+        <resources>
+            <testimonial_setup>
+                <setup>
+                    <module>Ebulb_Testimonial</module>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </testimonial_setup>
+            <testimonial_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </testimonial_write>
+            <testimonial_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </testimonial_read>
+        </resources>
+        <blocks>
+            <testimonial>
+                <class>Ebulb_Testimonial_Block</class>
+            </testimonial>
+        </blocks>
+        <helpers>
+            <testimonial>
+                <class>Ebulb_Testimonial_Helper</class>
+            </testimonial>
+        </helpers>
+    </global>
+</config>

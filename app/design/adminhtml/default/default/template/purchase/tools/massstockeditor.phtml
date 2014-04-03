@@ -1,0 +1,241 @@
+<script>
+
+function toggleInput(productId)
+{
+    
+    var chName                     = 'ch_product_' + productId;
+    
+    var stocktxtName               = 'stock_' + productId;
+    var stockminitxtName           = 'stockmini_' + productId;
+    var stockmaxtxtName            = 'stockmax_' + productId;
+    var avgcosttxtName             = 'avgcost_' + productId;
+    var costtxtName                = 'cost_' + productId;
+    var bintxtName                 = 'binNo_' + productId;
+    
+    if (document.getElementById(chName).checked){
+        document.getElementById(stocktxtName).disabled         = false;
+        document.getElementById(stockminitxtName).disabled     = false;
+        document.getElementById(stockmaxtxtName).disabled      = false;
+        document.getElementById(avgcosttxtName).disabled       = false;
+        document.getElementById(costtxtName).disabled          = false;
+        document.getElementById(bintxtName).disabled           = false;
+    }
+    else{
+        document.getElementById(stocktxtName).disabled         = true;    
+        document.getElementById(stockminitxtName).disabled     = true;    
+        document.getElementById(stockmaxtxtName).disabled      = true;    
+        document.getElementById(avgcosttxtName).disabled       = true;    
+        document.getElementById(costtxtName).disabled          = true;    
+        document.getElementById(bintxtName).disabled           = true;    
+    }
+}
+
+/*function toggleStockInput(productId)
+{
+    var chName = 'ch_stock_' + productId;
+    var txtName = 'stock_' + productId;
+    
+    if (document.getElementById(chName).checked)
+        document.getElementById(txtName).disabled = false;
+    else
+        document.getElementById(txtName).disabled = true;
+}
+
+function toggleStockMiniInput(productId)
+{                                                                
+    var chName = 'ch_stockmini_' + productId;
+    var txtName = 'stockmini_' + productId;
+    
+    if (document.getElementById(chName).checked)
+        document.getElementById(txtName).disabled = false;
+    else
+        document.getElementById(txtName).disabled = true;
+}
+
+
+function toggleStockMaxInput(productId)
+{
+    var chName = 'ch_stockmax_' + productId;
+    var txtName = 'stockmax_' + productId;
+    
+    if (document.getElementById(chName).checked)
+        document.getElementById(txtName).disabled = false;
+    else
+        document.getElementById(txtName).disabled = true;
+}
+
+function toggleAvgCostInput(productId)
+{
+    var chName = 'ch_avgcost_' + productId;
+    var txtName = 'avgcost_' + productId;
+    
+    if (document.getElementById(chName).checked)
+        document.getElementById(txtName).disabled = false;
+    else
+        document.getElementById(txtName).disabled = true;
+}
+
+function toggleCostInput(productId)
+{
+    var chName = 'ch_cost_' + productId;
+    var txtName = 'cost_' + productId;
+    
+    if (document.getElementById(chName).checked)
+        document.getElementById(txtName).disabled = false;
+    else
+        document.getElementById(txtName).disabled = true;
+}
+   
+
+
+function toggleBinNoInput(productId)
+{
+    var chName = 'ch_binNo_' + productId;
+    var txtName = 'binNo_' + productId;
+    
+    if (document.getElementById(chName).checked)
+        document.getElementById(txtName).disabled = false;
+    else
+        document.getElementById(txtName).disabled = true;
+} */
+
+function saveData()
+{
+    var stock = '';
+    var stockMini = '';
+    var stockMax = '';
+    var binNo = '';
+    var Cost = '';
+    var avgCost = '';
+    var productidstr = '';
+    
+    //collect informaiton to update
+    var ch = document.getElementsByTagName('input');
+    
+    for (i=0; i < ch.length; i++) 
+    {
+        if (ch[i] && ch[i].id != null)
+        {
+            if (ch[i].id.indexOf('ch_product_') != -1) 
+            {
+                if (ch[i].checked)
+                {
+                    var productId = ch[i].id.replace('ch_product_', ''); 
+                     
+                    productidstr += productId + ',';
+                      
+                    var binNoValue = document.getElementById('binNo_' + productId).value;
+                    binNo += productId + '####~~~~####' + binNoValue + '####@@@@####';  
+                    
+                    var CostValue = document.getElementById('cost_' + productId).value;
+                    Cost += productId + '####~~~~####' + CostValue + '####@@@@####';    
+                    
+                    var avgCostValue = document.getElementById('avgcost_' + productId).value;
+                    avgCost += productId + '####~~~~####' + avgCostValue + '####@@@@####';
+                    
+                    var stockMiniValue = document.getElementById('stockmini_' + productId).value;
+                    stockMini += productId + '####~~~~####' + stockMiniValue + '####@@@@####';
+                    
+                    var stockMaxValue = document.getElementById('stockmax_' + productId).value;
+                    stockMax += productId + '####~~~~####' + stockMaxValue + '####@@@@####'; 
+                    
+                    var stockValue = document.getElementById('stock_' + productId).value;
+                    stock += productId + '####~~~~####' + stockValue + '####@@@@####';              
+                }            
+            }
+            
+            
+            //if it concerns stocks
+            /*if (ch[i].id.indexOf('ch_stock_') != -1) 
+            {
+                if (ch[i].checked)
+                {
+                    var productId = ch[i].id.replace('ch_stock_', '');
+                    var stockValue = document.getElementById('stock_' + productId).value;
+                    stock += productId + '-' + stockValue + ',';
+                }
+            }
+            //if it concerns stocks
+            if (ch[i].id.indexOf('ch_stockmini_') != -1) 
+            {
+                if (ch[i].checked)
+                {
+                    var productId = ch[i].id.replace('ch_stockmini_', '');
+                    var stockMiniValue = document.getElementById('stockmini_' + productId).value;
+                    stockMini += productId + '-' + stockMiniValue + ',';                
+                }            
+            }
+            
+            if (ch[i].id.indexOf('ch_binNo_') != -1) 
+            {
+                if (ch[i].checked)
+                {
+                    var productId = ch[i].id.replace('ch_binNo_', '');
+                    var binNoValue = document.getElementById('binNo_' + productId).value;
+                    binNo += productId + '^^^^' + binNoValue + '####';                
+                }            
+            }  */ 
+        }
+    }
+    
+    //store data in form
+    document.getElementById('product_id').value    = productidstr;
+    
+    document.getElementById('binNo').value         = binNo;
+    document.getElementById('Cost').value          = Cost;
+    document.getElementById('avgCost').value       = avgCost;
+    document.getElementById('stockmini').value     = stockMini;
+    document.getElementById('stockmax').value      = stockMax;
+    document.getElementById('stock').value         = stock;
+                                                     
+    //send ajax request to update datas
+    var url = '<?php echo $this->getUrl('*/*/MassStockSave'); ?>';
+    var request = new Ajax.Request(
+        url,
+        {
+            method: 'post',
+            onSuccess: function onSuccess(transport)
+            {  
+                //alert(transport.responseText);return false;
+                alert('<?php echo $this->__('Data successfully saved.'); ?>');
+            },
+            onFailure: function onFailure(transport)
+            {
+                alert('<?php echo $this->__('Error !'); ?>');
+                //alert(transport.responseText);
+            },
+            parameters: Form.serialize(document.getElementById('ajax_form'))
+        }
+    );
+
+}
+
+</script>
+
+<form id="ajax_form" name="ajax_form">
+    <input type="hidden" name="product_id" id="product_id" value="" />
+    
+    <input type="hidden" name="binNo" id="binNo" value="">
+    <input type="hidden" name="Cost" id="Cost" value="">
+    <input type="hidden" name="avgCost" id="avgCost" value="">
+    <input type="hidden" name="stock" id="stock" value="">
+    <input type="hidden" name="stockmini" id="stockmini" value="">
+    <input type="hidden" name="stockmax" id="stockmax" value="">  
+</form>
+
+<div class="entry-edit">
+
+<div class="content-header">
+    <table cellspacing="0" class="grid-header">
+        <tr>
+            <td><h3><?php echo$this->__('Mass Stock Editor')?></h3></td>
+            <td align="right">
+                <button onclick="saveData();" class="scalable save" type="button"><span><?php echo $this->__('Save')?></span></button>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<?php echo $this->getGridParentHtml() ?>
+
+</div>

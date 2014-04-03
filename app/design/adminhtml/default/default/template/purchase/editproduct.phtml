@@ -1,0 +1,87 @@
+<?php 
+
+$product = $this->getProduct();
+
+$productmodel = Mage::getModel("catalog/product")->load($product->getProductId());
+if($productmodel){
+   $_productname = $productmodel->getName();
+   $_productsku  = $productmodel->getSku();   
+}
+ 
+?>
+<div style="<?php if($product->getVendorProductId() == '') { echo ';display: none;"'; } ?>" id="div_product_edit_<?php echo $product->getVendorProductId(); ?>">
+<form id="edit_form_product_<?php  echo $product->getVendorProductId(); ?>" name="edit_form_product_<?php  echo $product->getVendorProductId(); ?>" >
+<fieldset id="my-fieldset">
+
+
+<input id="form_key" name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>" />
+<input id="parent_id" name="parent_id" type="hidden" value="<?php echo $this->getParentId(); ?>" />
+<input id="product_id" name="product_id" type="hidden" value="<?php echo $product->getVendorProductId(); ?>" />
+
+<table width="100%" border="0" class="form-list">
+ 
+  <tr>
+    <td class="label"><?php echo $this->__('SKU #')?><span class="required">*</span></td>
+    <td class="value"><input type="text" name="sku" id="sku" onblur="ValidateSku(this.value,'<?php  echo $product->getVendorProductId(); ?>','<?php echo $this->getParentId(); ?>')" class="input-text" value="<?php echo $_productsku; //echo number_format((float)$this->getUpgrade()->getDiscount(),2,".",",") ?>"></td>
+  </tr>
+ <tr>
+    <td class="label"><?php echo $this->__('Product:')?></td>
+    <td class="value"><div id="edit_form_upgrade_product_<?php  echo $product->getVendorProductId(); ?>"><strong>Enter sku first...</strong></div></td>
+  </tr>
+  
+    <script type="text/javascript">
+     //<![CDATA[
+      <?php  if($product->getVendorProductId() && $_productname):?>  
+            document.getElementById("edit_form_upgrade_product_<?php  echo $product->getVendorProductId(); ?>").innerHTML= '<strong><?php echo $_productname; ?></strong>';
+      <?php endif;  ?>      
+      //]]>
+    </script>                                       
+  <tr>
+    <td class="label"><?php echo $this->__('Vendor Ref# ')?></td>
+    <td class="value"><input type="text" name="vendor_sku" id="vendor_sku" class="input-text"  value="<?php echo $product->getVendorSku(); //echo number_format((float)$this->getUpgrade()->getDiscount(),2,".",",") ?>"></td>
+  </tr>
+  
+  <tr>
+    <td class="label"><?php echo $this->__('Unit Cost ')?><span class="required">*</span></td>
+    <td class="value"><input type="text" name="unit_cost" id="unit_cost" class="input-text"  value="<?php echo $product->getUnitCost(); //echo number_format((float)$this->getUpgrade()->getDiscount(),2,".",",") ?>"></td>
+  </tr>
+  
+  
+   <tr>
+    <td class="label"><?php echo $this->__('MCP ')?></td>
+    <td class="value"><input type="text" name="master_carton_pack" id="master_carton_pack" class="input-text"  value="<?php echo $product->getMasterCartonPack(); //echo number_format((float)$this->getUpgrade()->getDiscount(),2,".",",") ?>"></td>
+  </tr>
+  
+   <tr>
+    <td class="label"><?php echo $this->__('Avg. Cost ')?></td>
+    <td class="value"><input type="text" name="avg_cost" id="avg_cost" class="input-text"  value="<?php echo $product->getAvgCost(); //echo number_format((float)$this->getUpgrade()->getDiscount(),2,".",",") ?>"></td>
+  </tr>
+  
+  <tr>
+    <td class="label"><?php echo $this->__('Last Addon Cost ')?></td>
+    <td class="value">
+        <input type="text" name="last_addon_cost" id="last_addon_cost" class="input-text"  value="<?php echo $product->getLastAddonCost(); //echo number_format((float)$this->getUpgrade()->getDiscount(),2,".",",") ?>">
+    </td>
+  </tr>
+  
+  <tr>
+    <td class="label"><?php echo $this->__('Last Landed Cost ')?></td>
+    <td class="value">
+        <input type="text" name="last_landed_cost" id="last_landed_cost" class="input-text"  value="<?php echo $product->getLastLandedCost(); //echo number_format((float)$this->getUpgrade()->getDiscount(),2,".",",") ?>">
+    </td> 
+  </tr>
+  
+   <tr>
+    <td class="label"><?php echo $this->__('Lead Time ')?></td>
+    <td class="value"><input type="text" name="lead_time" id="lead_time" class="input-text"  value="<?php echo $product->getLeadTime(); //echo number_format((float)$this->getUpgrade()->getDiscount(),2,".",",") ?>"></td>
+  </tr>
+        
+  <tr>
+    <td class="label"><?php //echo $this->__('Comments:')?></td>
+    <td class="value"><button onclick="SubmitProductForm('<?php echo $product->getVendorProductId(); ?>', '<?php echo $this->getGuid(); ?>','<?php  echo $this->getParentId(); ?>');" class="scalable save" type="button"><span><?php echo $this->__('Save Product')?></span></button></td></td>
+  </tr>                                                                                                                                                                                                                                               
+</table>
+
+</fieldset>
+</form> 
+</div>

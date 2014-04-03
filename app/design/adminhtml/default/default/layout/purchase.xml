@@ -1,0 +1,122 @@
+<?xml version="1.0"?>
+<!-- ce fichier doit se trouver dans adminhtml/default/default sinon pas pris en compte.. -->
+<layout version="0.1.0">
+           
+    <purchase_orders_list>
+        <reference name="content">
+            <block type="purchase/order_grid" name="orderlist" template="purchase/order/grid.phtml" />
+        </reference>
+    </purchase_orders_list>
+    <purchase_orders_new>
+        <reference name="content">
+            <block type="purchase/order_new" name="neworder" template="purchase/order/new.phtml" />
+        </reference>
+    </purchase_orders_new>
+    <purchase_orders_edit>
+
+        <reference name="content">
+            <block type="purchase/order_edit" name="order_edit"></block>
+        </reference>
+        <reference name="left">
+            <block type="purchase/order_edit_tabs" name="ordertabs">
+            </block>
+        </reference>
+    </purchase_orders_edit>
+    <purchase_receipts_new>
+        <reference name="content">
+            <block type="purchase/receipt_new" name="newreceipt" template="purchase/receipt/new.phtml" />
+        </reference>
+    </purchase_receipts_new>
+    <purchase_receipts_edit>
+        <reference name="content">
+            <block type="purchase/receipt_edit" name="receipt_edit"  template="purchase/receipt/edit.phtml"></block>
+        </reference>
+    </purchase_receipts_edit> 
+    
+       
+        <default>
+        <reference name="head">
+            <action method="addJs"><script>purchase/contactedit.js</script></action>  
+        </reference>
+        <reference name="content">
+            <block type="core/template" name="PurchaseBaseUrl" before="-" template="purchase/baseurl.phtml" />  
+        </reference>
+    </default>
+
+    <purchase_adminhtml_vendor_index> 
+        <reference name="content">
+            <block type="purchase/adminhtml_vendor" name="purchase_vendor" />
+        </reference>
+        
+        <!--<reference name="left">
+            <block type="purchase/adminhtml_vendor_edit_tabs" name="vendor_edit_tabs">
+                <action method="addTab"><name>adminhtml_vendor_edit_tab_order</name><block>adminhtml_vendor_edit_tab_order</block></action>
+            </block>
+        </reference>  -->
+        
+    </purchase_adminhtml_vendor_index>
+    
+    <purchase_adminhtml_contact_index>
+        <reference name="content">
+            <block type="purchase/adminhtml_contact" name="purchase_contact" />
+        </reference>
+    </purchase_adminhtml_contact_index>
+    
+    <purchase_adminhtml_inventory_index>
+        <reference name="content">
+            <block type="purchase/adminhtml_inventory" name="purchase_inventory" />
+        </reference> 
+    </purchase_adminhtml_inventory_index>
+    
+    <purchase_adminhtml_inventorycost_index>
+        <reference name="content">
+            <block type="purchase/adminhtml_inventorycost" name="purchase_inventorycost" />
+        </reference> 
+    </purchase_adminhtml_inventorycost_index>    
+
+
+    
+    <purchase_adminhtml_vendorsproduct_index>
+        <reference name="content">
+            <block type="purchase/adminhtml_vendorsproduct" name="purchase_vendorsproduct" >
+           </block>
+        </reference> 
+    </purchase_adminhtml_vendorsproduct_index>
+    
+    <purchase_adminhtml_inventory_edit>
+        <reference name="content">
+            <block type="purchase/adminhtml_inventory_edit" name="purchase_inventory_edit" />
+        </reference>
+        <reference name="left">
+            <block type="purchase/adminhtml_inventory_edit_tabs" name="inventory_edit_tabs">
+                <block type="purchase/adminhtml_inventory_edit_tab_view" name="purchase_inventory_edit_tab_view" template="purchase/inventory/tab/view.phtml"> 
+                </block>
+                <action method="addTab"><name>purchase_inventory_edit_tab_view</name><block>purchase_inventory_edit_tab_view</block></action>
+            </block>
+        </reference>
+    </purchase_adminhtml_inventory_edit>   
+    
+    <purchase_adminhtml_stockmovement_index>
+        <reference name="content">
+            <block type="purchase/adminhtml_stockmovement" name="purchase_stockmovement" />
+        </reference>
+    </purchase_adminhtml_stockmovement_index>
+    
+    <purchase_adminhtml_tools_massstockeditor>
+        <reference name="content">
+            <block type="purchase/adminhtml_tools_massstockeditor" name="pa" template="purchase/tools/massstockeditor.phtml" />
+        </reference>    
+    </purchase_adminhtml_tools_massstockeditor>
+    
+    <!--<purchase_adminhtml_vendor_edit>
+        <reference name="content">
+            <block type="purchase/adminhtml_vendor_edit" name="purchase_vendor_edit" ></block>
+        </reference>
+        <reference name="left">
+            <block type="purchase/adminhtml_vendor_edit_tabs" name="vendor_edit_tabs" >
+                
+            </block>     
+        </reference>  
+    </purchase_adminhtml_vendor_edit>-->
+    
+</layout>

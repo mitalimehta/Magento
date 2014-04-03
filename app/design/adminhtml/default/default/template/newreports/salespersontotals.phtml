@@ -1,0 +1,8 @@
+<?php 
+    $salesperson = Mage::registry('report_filter_sales_person');
+    if($salesperson == 'all'){
+?>
+<div> 
+    <?php echo $this->getGridHtml() ?>
+</div>
+<?php } ?>

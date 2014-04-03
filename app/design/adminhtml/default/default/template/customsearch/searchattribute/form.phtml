@@ -1,0 +1,268 @@
+<script type="text/javascript" language="javascript">
+var sort_order = 0
+function getAttributeValues(att_id,selected){
+   
+    document.getElementById("attbibute_values").innerHTML = '';
+    document.getElementById("attbibutes_div").innerHTML = '';
+    document.getElementById("selectedattrbutes").innerHTML = '';
+    
+    switch(att_id)
+    {
+        case '1':   
+            url = "<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB); ?>customsearch/adminhtml_searchattribute/getattributesets/";
+            if(selected)
+                url += "selected/"+selected;
+                
+            new Ajax.Request(url,
+            {   asynchronous: false, 
+                onComplete: showResponse
+            });    
+        break;
+        
+        case '2':   
+            url = "<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB); ?>customsearch/adminhtml_searchattribute/getallattributes/";
+            if(selected){
+                url += "selected/"+selected; 
+            }
+                
+            new Ajax.Request(url,
+            {   asynchronous: false, 
+                onComplete: showResponse
+            });    
+        break;        
+    }
+}
+
+
+function showResponse(req){
+    document.getElementById("attbibute_values").innerHTML = req.responseText;
+    return false;
+}
+    
+function getAttributes(attset_id){
+    
+    document.getElementById("attbibutes_div").innerHTML = '';
+    document.getElementById("selectedattrbutes").innerHTML = '';
+    
+    url = "<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB); ?>customsearch/adminhtml_searchattribute/getattributes/entity_id/"+attset_id;
+    var request = new Ajax.Request(
+        url,
+        {
+            method:'POST',
+            onSuccess: function onSuccess(transport)
+            {  
+                document.getElementById("attbibutes_div").innerHTML = transport.responseText;   
+            },
+            onFailure: function onFailure() 
+            {
+                alert('error');
+            },
+        }
+    );        
+}
+
+function addattribute(attribute_id,sort_order){
+   
+    if(document.getElementById("selectedattrbutes").innerHTML == ''){
+        var start = 1;
+    }
+    else{ 
+        var start = null;   
+    }
+       
+    url = "<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB); ?>customsearch/adminhtml_searchattribute/addattributes/entity_id/"+attribute_id+"/start/"+start+"/sort_order/"+sort_order;
+    
+    var request = new Ajax.Request(
+        url,
+        {
+            method:'POST',
+            asynchronous:false,      
+            onSuccess: function onSuccess(transport)
+            {  
+                document.getElementById("selectedattrbutes").innerHTML += transport.responseText;       
+            },
+            onFailure: function onFailure() 
+            {
+                alert('error');
+            }, 
+        }
+    );
+    
+}
+  
+  
+function deleteattribute(attribute_td){
+    
+    document.getElementById("attribute_table_"+attribute_td).innerHTML = "";
+        
+    var d = document.getElementById("selectedattrbutes");
+    var olddiv = document.getElementById("attribute_table_"+attribute_td);
+    d.removeChild(olddiv); 
+        
+}
+
+function loadattributevalues(attribute_id,selected){
+    document.getElementById("attbibute_options_tr").style.display = '';
+   
+    url = "<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB); ?>customsearch/adminhtml_searchattribute/loadattributevalues/attribute_id/"+attribute_id+"/";
+    if(selected)
+    {
+        url += "selected/"+selected; 
+    }
+    var request = new Ajax.Request(
+        url,
+        {
+            method:'POST',
+            asynchronous:false,      
+            onSuccess: function onSuccess(transport)
+            {  
+                document.getElementById("attbibute_options").innerHTML = transport.responseText;  
+                if(!selected)
+                {
+                    getAttributes();     
+                }  
+            },
+            onFailure: function onFailure() 
+            {
+                alert('error');
+            },
+        }
+    );
+    
+}
+    
+</script>
+<?php 
+    $model = Mage::registry('current_search');
+    
+    $_SearchLabel           = $model->getTypeLabel();
+    $_SearchType            = $model->getTypeId();
+    $_SearchEntityId        = $model->getTypeEntityId();
+    $_SearchEntityvalue     = $model->getTypeEntityValue();
+    $_Searchcategoryid      = $model->getCategoryId();
+    
+    $_SearchStatus          = $model->getEnabled();
+    
+    if($model->getId())
+        $_SearchAttributes   = $model->getSearchAttributes($model->getId()); 
+   
+?>
+<div class="entry-edit">
+<form action="<?php echo $this->getSaveUrl(); ?>" id="edit_form" name="edit_form" method="post" enctype="multipart/form-data" >
+<input name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>" />
+<!--<input name="id" type="hidden" value="<?php echo $model->getId(); ?>" /> -->
+    <div class="entry-edit">
+        <div class="entry-edit-head">
+            <h4 class="icon-head head-edit-form fieldset-legend">Custom Search</h4>
+            <div class="form-buttons"></div>
+        </div>
+        <div class="fieldset " id="_vendoredit_form1">
+            <div class="hor-scroll">
+                <table class="form-list" cellspacing="0">
+                    <tbody>
+                        <tr>
+                            <td class="label"><label for="_vendorvendor_name">Search Label <span class="required">*</span></label></td>
+                            <td class="value">
+                                <input id="type_label" name="type_label" class="required-entry input-text required-entry" type="text" value="<?php echo $_SearchLabel;   ?>" />            
+                            </td>
+                        </tr>
+                        
+                         <tr>
+                            <td class="label"><label for="_vendorvendor_name">Status <span class="required">*</span></label></td>
+                            <td class="value">
+                                <?php 
+                                    $status_ids = $model->getstatusIds();
+                                ?>
+                                <select id="enabled" name="enabled"  class="required-entry">
+                                    <option value="">--please select--</option>
+                                        <?php foreach($status_ids as $key=>$val): ?>    
+                                            <option value="<?php echo $key; ?>" <?php if($_SearchStatus ==  $key) { ?> selected="selected" <?php } ?>><?php echo $val; ?></option>
+                                        <?php endforeach;?>
+                                </select>
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <td class="label"><label for="_vendorvendor_name">Search Type <span class="required">*</span></label></td>
+                            <td class="value">
+                                <?php 
+                                    $type_ids = $model->getsearchTypeIds();
+                                ?>
+                                <select id="type_id" name="type_id"  class="required-entry" onchange="javascript: getAttributeValues(this.value)">
+                                    <option value="">--please select--</option>
+                                        <?php foreach($type_ids as $key=>$val): ?>    
+                                            <option value="<?php echo $key; ?>" <?php if($_SearchType ==  $key) { ?> selected="selected" <?php } ?>><?php echo $val; ?></option>
+                                        <?php endforeach;?>
+                                </select>
+                            </td>
+                        </tr>
+                       
+                        <tr>
+                            <td class="label"><label for="_vendorvendor_name">Category</label></td>
+                            <td class="value">
+                                <?php 
+                                    $categories = $model->get_categories();
+                                ?>
+                                <select id="category_id" name="category_id">
+                                    <option value="">--please select--</option>
+                                        <?php foreach($categories as $key=>$val): ?>    
+                                            <option value="<?php echo $key; ?>" <?php if($_Searchcategoryid ==  $key) { ?> selected="selected" <?php } ?>><?php echo $val; ?></option>
+                                        <?php endforeach;?>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="label"><label for="_vendorvendor_name">Options<span class="required">*</span></label></td>
+                            <td class="value" id="attbibute_values"></td>
+                        </tr>
+                        <tr style="display: none;" id="attbibute_options_tr">
+                            <td class="label"><label for="_vendorvendor_name">Attribute Options<span class="required">*</span></label></td>
+                            <td class="value" id="attbibute_options"></td>
+                        </tr>
+                        <tr>
+                            <td class="label"><label for="_vendorvendor_name">Attributes</label></td>
+                            <td class="value" id="attbibutes_div"></td>
+                        </tr>
+                        <tr>
+                            <td class="label"><label for="_vendorvendor_name"></label></td>
+                            <td class="value" id="selectedattrbutes"></td>
+                        </tr> 
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</form>
+</div>  
+<div id="loading-mask" style="display:none">
+    <p class="loader" id="loading_mask_loader"><img src="<?php echo $this->getSkinUrl('images/ajax-loader-tr.gif') ?>" alt="<?php echo Mage::helper('adminhtml')->__('Loading...') ?>"/><br/><?php echo Mage::helper('adminhtml')->__('Please wait...') ?></p>
+</div> 
+<script type="text/javascript" language="javascript">
+
+var loadingdiv = document.getElementById('loading-mask');   
+loadingdiv.style.display = "";  
+
+<?php if($_SearchType){ ?>  
+getAttributeValues('<?php echo $_SearchType; ?>','<?php echo $_SearchEntityId; ?>');
+<?php } 
+
+if($_SearchType == 2){
+?>
+loadattributevalues('<?php echo $_SearchEntityId; ?>','<?php echo $_SearchEntityvalue; ?>')
+<?php
+}
+
+if($_SearchEntityId) { ?>
+getAttributes('<?php echo $_SearchEntityId; ?>');
+<?php } 
+
+if(is_array($_SearchAttributes)){
+    
+        foreach($_SearchAttributes as $_searchattribute){ ?>
+            addattribute('<?php echo $_searchattribute['attribute_id']; ?>' , '<?php echo $_searchattribute['sort_order']; ?>');
+        <?php } 
+} ?>
+
+loadingdiv.style.display = "none";
+
+</script>

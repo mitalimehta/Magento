@@ -1,0 +1,141 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Ebulb_Productgroup>
+            <version>0.2.0</version>
+        </Ebulb_Productgroup>
+    </modules>
+    
+    <admin>
+        <routers>
+            <productgroup>
+                <!-- should be set to "admin" when overloading admin stuff (?) -->
+                <use>admin</use>
+                <args>
+                    <module>Ebulb_Productgroup</module>
+                    <!-- This is used when "catching" the rewrite above -->
+                    <frontName>productgroup</frontName>
+                </args>
+            </productgroup>
+        </routers>
+    </admin>
+    
+    <global>
+        <models> 
+            <productgroup>
+                <class>Ebulb_Productgroup_Model</class>
+                <resourceModel>productgroup_mysql4</resourceModel>
+            </productgroup>
+            
+            <productgroup_mysql4>
+                <class>Ebulb_Productgroup_Model_Mysql4</class>
+                <entities>
+                    <productgroup> 
+                        <table>catalog_product_group</table>
+                    </productgroup>
+                    <catalog_product_group> 
+                        <table>catalog_product_group</table>
+                    </catalog_product_group>
+                    <catalog_product_group_attr>
+                        <table>catalog_product_group_attr</table>
+                    </catalog_product_group_attr>
+                    <catalog_product_group_attr_option>
+                        <table>catalog_product_group_attr_option</table>
+                    </catalog_product_group_attr_option>
+                    <catalog_product_group_product>
+                        <table>catalog_product_group_product</table>
+                    </catalog_product_group_product> 
+                </entities>
+            </productgroup_mysql4>
+        </models>
+        
+        <resources>
+            <productgroup_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </productgroup_write>
+            <productgroup_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </productgroup_read>
+        </resources>
+        
+        <blocks>
+            <productgroup>
+                <class>Ebulb_Productgroup_Block</class>
+            </productgroup>
+        </blocks>
+        
+        <helpers>
+            <productgroup>
+                  <class>Ebulb_Productgroup_Helper</class>
+            </productgroup>
+        </helpers>
+    </global>
+    
+    <adminhtml>
+        <menu>
+            <catalog module="productgroup">
+                <children>
+                    <productgroup translate="title" module="productgroup">
+                        <title>Manage Groups</title>
+                        <sort_order>601</sort_order>
+                        <action>productgroup/adminhtml_productgroup</action>
+                        <!--    <children>
+                                <items1 module="productgroup">
+                                    <title>Manage Groups</title>
+                                    <sort_order>0</sort_order>
+                                    <action>productgroup/adminhtml_productgroup</action> 
+                                </items1> 
+                                <items2 module="productgroup">
+                                    <title>Manage Group Products</title>
+                                    <sort_order>1</sort_order>
+                                    <action>productgroup/adminhtml_productgroup</action> 
+                                </items2>  
+                            </children>  -->
+                    </productgroup>
+                </children>    
+            </catalog>    
+        </menu>
+        <acl>
+            <resources>
+                <all>
+                    <title>Allow Everything</title>
+                </all>
+                <admin>
+                    <children>
+                        <catalog>
+                            <children>     
+                                <productgroup>
+                                    <title>Product Group Module</title>
+                                    <sort_order>10</sort_order>
+                                </productgroup>
+                            </children>
+                        </catalog> 
+                    </children>
+                </admin>
+            </resources>
+        </acl>
+        <layout>
+            <updates>
+                <productgroup>
+                    <file>productgroup.xml</file>
+                </productgroup>
+            </updates>
+        </layout>
+    </adminhtml>
+    
+    <frontend>
+        <routers>
+            <Ebulb_Productgroup>
+                <use>standard</use>
+                <args>
+                    <module>Ebulb_Productgroup</module>
+                    <frontName>productgroup</frontName>
+                </args>
+            </Ebulb_Productgroup>
+        </routers>
+    </frontend>
+</config> 

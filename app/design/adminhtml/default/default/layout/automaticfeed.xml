@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+   <automaticfeed_adminhtml_company_index>
+        <reference name="content">
+            <block type="automaticfeed/adminhtml_company" name="automaticfeed_company" />
+        </reference>
+    </automaticfeed_adminhtml_company_index> 
+    
+    <automaticfeed_adminhtml_settings_index>
+        <reference name="content">
+            <block type="automaticfeed/adminhtml_settings" name="automaticfeed_settings" />
+        </reference>
+    </automaticfeed_adminhtml_settings_index> 
+    
+    <automaticfeed_adminhtml_create_index>
+        <reference name="content">
+            <block type="automaticfeed/adminhtml_create" name="automaticfeed_create" />
+        </reference>
+    </automaticfeed_adminhtml_create_index> 
+</layout>

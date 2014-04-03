@@ -1,0 +1,171 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Ebulb_Automaticfeed>
+            <version>0.1.3</version>
+        </Ebulb_Automaticfeed>
+    </modules>
+    
+    <admin>
+        <routers>
+            <automaticfeed>
+                <!-- should be set to "admin" when overloading admin stuff (?) -->
+                <use>admin</use>
+                <args>
+                    <module>Ebulb_Automaticfeed</module>
+                    <!-- This is used when "catching" the rewrite above -->
+                    <frontName>automaticfeed</frontName>
+                </args>
+            </automaticfeed>
+        </routers>
+    </admin>
+
+    <frontend>
+        <routers>
+            <automaticfeed>
+                <use>standard</use>
+                <args>
+                    <module>Ebulb_Automaticfeed</module>
+                    <frontName>automaticfeed</frontName>
+                </args>
+            </automaticfeed>
+        </routers>
+    </frontend>
+    
+    <global>
+        <models> 
+            <automaticfeed>
+                <class>Ebulb_Automaticfeed_Model</class>
+                <resourceModel>automaticfeed_mysql4</resourceModel>
+            </automaticfeed>
+            
+            <automaticfeed_mysql4>
+                <class>Ebulb_Automaticfeed_Model_Mysql4</class>
+                <entities>
+                    <company> 
+                        <table>auto_feed_company</table>
+                    </company> 
+                     <autofeedinfo> 
+                        <table>auto_feed_info</table>
+                    </autofeedinfo>
+                    <autofeedattrinfo> 
+                        <table>auto_feed_attr_info</table>
+                    </autofeedattrinfo>
+                
+                </entities>
+            </automaticfeed_mysql4>
+        </models>
+        
+        <resources>
+            <automaticfeed_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </automaticfeed_write>
+            <automaticfeed_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </automaticfeed_read>
+            <automaticfeed_setup>
+                <setup>
+                    <module>Ebulb_Automaticfeed</module>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </automaticfeed_setup>
+        </resources>
+        
+        <blocks>
+            <automaticfeed>
+                <class>Ebulb_Automaticfeed_Block</class>
+            </automaticfeed>
+        </blocks>
+        
+        <helpers>
+            <automaticfeed>
+                  <class>Ebulb_Automaticfeed_Helper</class>
+            </automaticfeed>
+        </helpers>
+
+        
+
+    </global>
+   
+    <adminhtml>
+        <menu>
+            <catalog module="automaticfeed">
+                <children>
+                    <automaticfeed translate="title" module="automaticfeed">
+                        <title>Manage Automatic Feeds</title>
+                        <sort_order>701</sort_order>
+                        
+                        <children>
+                                <automaticfeed_company module="automaticfeed">
+                                    <title>Manage Company List</title>
+                                    <sort_order>0</sort_order>
+                                    <action>automaticfeed/adminhtml_company</action> 
+                                </automaticfeed_company> 
+                                <automaticfeed_settings module="automaticfeed">
+                                    <title>Manage Settings</title>
+                                    <sort_order>1</sort_order>
+                                    <action>automaticfeed/adminhtml_settings</action> 
+                                </automaticfeed_settings>
+                                <automaticfeed_createfeed module="automaticfeed">
+                                    <title>Create New Feeds</title>
+                                    <sort_order>2</sort_order>
+                                    <action>automaticfeed/adminhtml_create</action> 
+                                </automaticfeed_createfeed>  
+                        </children> 
+                    </automaticfeed>
+                </children>    
+            </catalog>    
+        </menu>
+        <acl>
+            <resources>
+                <all>
+                        <title>Allow Everything</title>
+                </all>
+                <admin>
+                    <children>
+                        <automaticfeed>
+                            <title>Automaticfeed Module</title>
+                            <sort_order>10</sort_order>
+                            <children>
+                                <automaticfeed_company translate="title">
+                                    <title>Company List</title>
+                                    <sort_order>0</sort_order>
+                                </automaticfeed_company>
+                                <automaticfeed_settings translate="title">
+                                    <title>Settings</title>
+                                    <sort_order>10</sort_order>
+                                </automaticfeed_settings>
+        
+                        </children>
+                        </automaticfeed>
+                        <system>
+                            <children>
+                                <config>
+                                    <children>
+                                        <automaticfeed module="automaticfeed">
+                        <title>automaticfeed</title>
+                                    </automaticfeed>
+                                    </children>
+                                    
+                                </config>
+                            </children>    
+                        </system>
+                    </children>
+                </admin>
+            </resources>
+        </acl>        
+        <layout>
+            <updates>
+                <automaticfeed>
+                    <file>automaticfeed.xml</file>
+                </automaticfeed>
+            </updates>
+        </layout>
+    </adminhtml>
+</config> 

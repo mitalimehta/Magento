@@ -1,0 +1,42 @@
+<div class="entry-edit" id="div_task_list">
+
+<div class="content-header">
+    <table cellspacing="0" class="grid-header">
+        <tr>
+            <td><h3><?php echo $this->__("Products")?></h3></td> 
+        </tr>
+    </table>
+</div>
+
+<?php echo $this->getGridParentHtml() ?>
+
+<br />
+
+    <table cellspacing="0" class="grid-header">
+        <tr>
+            <td></td>
+            <td align="right">
+                    <button type="button" 
+                            class="scalable add" 
+                            onclick="toggleNewProduct(<?php echo $this->getGuid(); ?>)" style="">
+                    <span><?php echo $this->__('New Product'); ?></span>   
+                    </button> 
+            </td>
+        </tr>
+    </table> 
+<br /> 
+       
+<?php
+
+$block = $this->getLayout()
+              ->createBlock('purchase/adminhtml_vendor_edit_tab_productedit')
+              ->setTemplate('purchase/editproduct.phtml')
+              ->setParentId($this->getParentId())
+              ->setGuid($this->getGuid());
+              
+echo $block->toHtml();
+
+?>
+
+      
+</div>

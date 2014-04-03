@@ -1,0 +1,8 @@
+<?xml version="1.0"?> 
+<layout>
+      <automativesearch_adminhtml_automotivebulbs_index> 
+            <reference name="content">
+                <block type="automativesearch/adminhtml_automotivebulbs" name="automativesearch_automotivebulbs" />
+            </reference> 
+     </automativesearch_adminhtml_automotivebulbs_index>
+</layout>

@@ -1,0 +1,51 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     default_default
+ * @copyright   Copyright (c) 2010 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php
+/**
+ * @see Ebulb_Purchase_Block_Adminhtml_Vendorsproduct_Vendor_Switcher
+ */
+?>
+
+<p class="switcher"><label for="vendor_switcher"><?php echo $this->__('Show product For Vendor') ?>:</label>
+<select name="vendor_switcher" id="vendor_switcher" onchange="return switchVendor(this);">
+    <option value=""><?php echo $this->__('All Vendors') ?></option>
+    <?php foreach ($this->getVendorCollection() as $_vendor): ?>
+          <option value="<?php echo $_vendor->getVendorId() ?>"<?php if($this->getVendorId() == $_vendor->getId()): ?> selected<?php endif; ?>>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $_vendor->getVendorName() ?></option>
+    <?php endforeach; ?>
+</select>
+</p>
+<script type="text/javascript">
+    function switchVendor(obj){
+        var selectionType = 'vendor';
+ 
+        var vendorParam = obj.value ? selectionType + '/' + obj.value + '/' : '';
+        if(obj.vendorParams){
+            vendorParam = obj.switchParams;
+        }
+        setLocation('<?php echo $this->getSwitchUrl() ?>'+vendorParam);
+    }
+</script>

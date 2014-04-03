@@ -1,0 +1,179 @@
+<?xml version="1.0"?>
+<!-- 
+/**
+ * @category   Ebulb
+ * @package    Ebulb_Equipmentsearch
+ * @author     ModuleCreator
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
+ -->
+<config>
+    <modules>
+        <Ebulb_Equipmentsearch>
+            <version>0.1.0</version>
+        </Ebulb_Equipmentsearch>
+    </modules>
+    <frontend>
+        <routers>
+            <equipmentsearch>
+                <use>standard</use>
+                <args>
+                    <module>Ebulb_Equipmentsearch</module>
+                    <frontName>equipmentsearch</frontName>
+                </args>
+            </equipmentsearch>
+        </routers>
+        <layout>
+            <updates>
+                <equipmentsearch>
+                    <file>equipmentsearch.xml</file>
+                </equipmentsearch>
+            </updates>
+        </layout>
+        
+        <equipmentsearch>
+            <per_page_values>5,10,20,50</per_page_values>
+        </equipmentsearch>
+    </frontend>
+    <global>
+        <blocks>
+            <equipmentsearch>
+                <class>Ebulb_Equipmentsearch_Block</class>
+            </equipmentsearch>
+        </blocks>
+        <helpers>
+            <equipmentsearch>
+                <class>Ebulb_Equipmentsearch_Helper</class>
+            </equipmentsearch>
+        </helpers>
+        <models>
+            <equipmentsearch>
+                <class>Ebulb_Equipmentsearch_Model</class>
+                <resourceModel>equipmentsearch_mysql4</resourceModel>
+            </equipmentsearch>
+            <equipmentsearch_mysql4>
+                <class>Ebulb_Equipmentsearch_Model_Mysql4</class>
+                <entities> 
+                    <equipmentsearch>
+                        <table>equipment</table>
+                    </equipmentsearch>
+                    <equipment>
+                        <table>equipment</table>
+                    </equipment>
+                    <equipment_category>
+                        <table>equipment_category</table>
+                    </equipment_category>
+                    <equipment_category_relation>
+                        <table>equipment_category_relation</table>
+                    </equipment_category_relation>
+                    <equipment_category_website>
+                        <table>equipment_category_website</table>
+                    </equipment_category_website>
+                    <equipment_manuf>
+                        <table>equipment_manuf</table>
+                    </equipment_manuf>
+                    <equipment_product>
+                        <table>equipment_product</table>
+                    </equipment_product>
+                </entities>
+            </equipmentsearch_mysql4>
+            
+    
+            
+        </models>
+        <resources>
+            <equipmentsearch_setup>
+                <setup>
+                    <module>Ebulb_Equipmentsearch</module>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </equipmentsearch_setup>
+            <equipmentsearch_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </equipmentsearch_write>
+            <equipmentsearch_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </equipmentsearch_read>
+        </resources>
+    </global>    
+    
+    <!--<admin>
+        <routers>
+            <automativesearch>
+                <use>admin</use>
+                <args>
+                    <module>Ebulb_Automativesearch</module>
+                    <frontName>automativesearch</frontName>
+                </args>
+            </automativesearch>
+        </routers>
+        
+        <acl>
+            <resources>
+                <all>
+                    <title>Allow Everything</title>
+                </all>
+                <admin>
+                    <children>
+                        <Ebulb_Automativesearch>
+                            <title>Automativesearch Module</title>
+                            <sort_order>10</sort_order>
+                        </Ebulb_Automativesearch>
+                    </children>
+                </admin>
+            </resources>
+        </acl>
+        
+        <layout>
+            <updates>
+                <automativesearch>
+                    <file>Automativesearch.xml</file>
+                </automativesearch>
+            </updates>
+        </layout>
+    </admin>  
+    
+   <adminhtml>
+        <menu>
+            <automativesearch module="automativesearch">
+                <title>Automative search</title>
+                <sort_order>71</sort_order>               
+                <children>
+                    <items module="automativesearch">
+                        <title>View Automative search</title>
+                        <sort_order>0</sort_order>
+                        <action>automativesearch/adminhtml_automativesearch</action>
+                    </items>
+                </children>      
+            </automativesearch>   
+        </menu>
+        <acl>
+            <resources>
+                <all>
+                    <title>Allow Everything</title>
+                </all>
+                <admin>
+                    <children>
+                        <Ebulb_Automativesearch>
+                            <title>Automativesearch Module</title>
+                            <sort_order>10</sort_order>
+                        </Ebulb_Automativesearch>
+                    </children>
+                </admin>
+            </resources>
+        </acl>
+        <layout>
+            <updates>
+                <automativesearch>
+                    <file>automativesearch.xml</file>
+                </automativesearch>
+            </updates>
+        </layout>        
+    </adminhtml> -->      
+</config>

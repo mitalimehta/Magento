@@ -1,0 +1,313 @@
+<script type="text/javascript" language="javascript"> 
+    
+    function Checkproductsku(productsku){ 
+    
+       if(productsku){
+            url = "<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB); ?>automativesearch/adminhtml_automotivebulbs/checkproductsku/productsku/"+encode_base64(productsku);
+            new Ajax.Request(url,
+            {   asynchronous: false, 
+                onComplete: showResponse1
+            });   
+       }
+    }   
+    
+    function showResponse1(response){
+        if(response.responseText){
+            alert(response.responseText);
+            return false;
+        }
+    } 
+
+    var count = 1;    
+    function addmore(locationid){
+        url = "<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB); ?>automativesearch/adminhtml_automotivebulbs/addmore/count/"+count;
+        
+        if(locationid)
+             url += "/locationid/"+locationid;         
+        //alert(url);
+            var request = new Ajax.Request(
+            url,
+            {
+                method:'GET',
+                asynchronous:false,      
+                onComplete: function onComplete(transport)
+                {  
+                    var attroptiondivtag = document.createElement("tr"); 
+                    attroptiondivtag.id = "locations_div_"+count; 
+                    attroptiondivtag.innerHTML = transport.responseText; 
+                    
+                    document.getElementById("automotive_options").appendChild(attroptiondivtag);
+                    count++;
+                },
+                onFailure: function onFailure() 
+                {
+                    alert('error');
+                },
+            }
+        );                
+    }
+    var product_counter = 0;
+    function addproducts(count,sku){ 
+    
+       url = "<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB); ?>automativesearch/adminhtml_automotivebulbs/addproduct/count/"+count+"/productcounter/"+product_counter;
+       
+       if(sku){
+           url += "/sku/"+sku;
+       }
+            var request = new Ajax.Request(
+            url,
+            {
+                method:'GET',
+                asynchronous:false,      
+                onComplete: function onComplete(transport)
+                {  
+                    var attroptiondivtag = document.createElement("div"); 
+                    attroptiondivtag.id = "product_div_"+product_counter;
+                    attroptiondivtag.innerHTML = transport.responseText; 
+                    
+                    document.getElementById("products_sku_"+count).appendChild(attroptiondivtag);   
+                    product_counter++;
+                },
+                onFailure: function onFailure() 
+                {
+                    alert('error');
+                },
+            }
+        );                 
+     
+    }
+    
+    function removelocation(counter)
+    {
+        document.getElementById("locations_div_"+counter).innerHTML = "";
+        
+        var d = document.getElementById("automotive_options");
+        var olddiv = document.getElementById("locations_div_"+counter);
+        d.removeChild(olddiv);     
+    }
+    
+    function removeproduct(productcounter){
+        document.getElementById("product_div_"+productcounter).innerHTML = "";
+        
+        //var d = document.getElementById("automotive_options");
+        //var olddiv = document.getElementById("product_div_"+productcounter);
+        //d.removeChild(olddiv);     
+    }
+</script>
+<?php 
+
+    $car_manufacturers    = Mage::getModel('automativesearch/automativesearch')->getAllOptions('car_manufacturer');
+    $car_years            = Mage::getModel('automativesearch/automativesearch')->getAllOptions('car_year');
+    $car_models           = Mage::getModel('automativesearch/automativesearch')->getAllOptions('car_model');     
+    $car_types            = Mage::getModel('automativesearch/automativesearch')->getAllOptions('car_type');     
+    $car_location         = Mage::getModel('automativesearch/automativesearch')->getAllOptions('car_bulb_location');     
+    
+    $model = Mage::registry('current_model');
+    
+    $car_manufacturer_id        = $model->getData('car_manufacturer_id'); 
+    $car_manufacturer_year_id   = $model->getData('car_manufacturer_year_id'); 
+    $car_manufacturer_model_id  = $model->getData('car_manufacturer_model_id'); 
+    $car_manufacturer_type_id   = $model->getData('car_manufacturer_type_id'); 
+    
+    //echo $car_manufacturer_id."---".$car_manufacturer_year_id."---".$car_manufacturer_model_id."----".$car_manufacturer_type_id;
+    
+    $automotivebulbs =  $model->getAutomotiveBulbs($car_manufacturer_id,$car_manufacturer_year_id,$car_manufacturer_model_id,$car_manufacturer_type_id,$model->getId());
+?>
+
+<div class="entry-edit">
+<form action="<?php echo $this->getSaveUrl(); ?>" id="edit_form" name="edit_form" method="post" enctype="multipart/form-data" >
+<input name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>" />
+
+    <div class="entry-edit">
+        <div class="entry-edit-head">
+            <h4 class="icon-head head-edit-form fieldset-legend">Automotive Search</h4>
+            <div class="form-buttons"></div>
+        </div>
+        <div class="fieldset " id="_vendoredit_form1">
+            <div class="hor-scroll">
+                <table class="form-list" cellspacing="7" id="automotive_options" border="0">
+                    <tbody>
+                        <tr>
+                            <td class="label"><button type="button" class="scalable add" onclick="addmore();";><span>ADD MORE</span></button></td> 
+                            <td class="label"><label for="_vendorvendor_name"><strong>Manufacturer</strong></label></td>
+                            <td class="label"><label for="_vendorvendor_name"><strong>Year</label></td>
+                            <td class="label"><label for="_vendorvendor_name"><strong>Model</label></td>
+                            <td class="label"><label for="_vendorvendor_name"><strong>Type</label></td>
+                            <td class="label"><label for="_vendorvendor_name"><strong>Location</label></td>
+                            <td class="label"><label for="_vendorvendor_name"><strong>Product SKU</label></td>
+                            <td class="label"></td>  
+                        </tr> 
+                        
+                        <tr>
+                            <td class="label"></td> 
+                            <td class="label">
+                                <?php 
+                                    $disabled = '';      
+                                    if($car_manufacturer_id){
+                                         $disabled = " disabled = 'disabled' ";   
+                                        ?>
+                                        <input type="hidden" name="car_manufacturer_id_hdn" value="<?php echo $car_manufacturer_id; ?>" /> 
+                                        <?php
+                                    }
+                                        
+                                ?>
+                                <select name="car_manufacturer_id" id="car_manufacturer_id" style="width: 200px;" <?php echo $disabled; ?>>
+                                    <option value="">-- Select --</option>
+                                    <?php foreach($car_manufacturers as $key=>$val){
+                                            $selected = '';  
+                                            if($car_manufacturer_id == $key){
+                                                $selected = " selected = 'selected' ";  
+                                            }   
+                                    ?>
+                                    <option value="<?php echo $key; ?>" <?php echo $selected; ?>><?php echo $val; ?></option>
+                                    <?php } ?>
+                                </select>    
+                            </td>
+                            <td class="label"><label for="_vendorvendor_name">
+                                <?php 
+                                    $disabled = '';      
+                                    if($car_manufacturer_year_id) {
+                                         $disabled = " disabled = 'disabled' ";   
+                                         ?>
+                                        <input type="hidden" name="car_manufacturer_year_id_hdn" value="<?php echo $car_manufacturer_year_id; ?>" /> 
+                                        <?php
+                                    }
+                                ?>
+                                <select name="car_manufacturer_year_id" id="car_manufacturer_year_id" style="width: 200px;" <?php echo $disabled; ?>> 
+                                    <option value="">-- Select --</option>
+                                    <?php foreach($car_years as $key=>$val){
+                                            $selected = '';  
+                                            if($car_manufacturer_year_id == $key){
+                                                $selected = " selected = 'selected' ";  
+                                            }    
+                                    ?>
+                                    <option value="<?php echo $key; ?>" <?php echo $selected; ?>><?php echo $val; ?></option>
+                                    <?php } ?>
+                                </select>
+                            </td>
+                            <td class="label">
+                                <?php 
+                                    $disabled = '';      
+                                    if($car_manufacturer_model_id){
+                                         $disabled = " disabled = 'disabled' ";   
+                                         ?>
+                                        <input type="hidden" name="car_manufacturer_model_id_hdn" value="<?php echo $car_manufacturer_model_id; ?>" /> 
+                                        <?php
+                                    }
+                                        
+                                ?>
+                                <select name="car_manufacturer_model_id" id="car_manufacturer_model_id" style="width: 200px;" <?php echo $disabled; ?>> 
+                                    <option value="">-- Select --</option>
+                                    <?php foreach($car_models as $key=>$val){
+                                            $selected = '';  
+                                            if($car_manufacturer_model_id == $key){
+                                                $selected = " selected = 'selected' ";  
+                                            }    
+                                            
+                                        ?>
+                                    <option value="<?php echo $key; ?>" <?php echo $selected; ?>><?php echo $val; ?></option>
+                                    <?php } ?>
+                                </select>
+                            </td>
+                            <td class="label">
+                                <?php 
+                                    $disabled = '';      
+                                    if($car_manufacturer_type_id || $car_manufacturer_id){
+                                         $disabled = " disabled = 'disabled' ";   
+                                         ?>
+                                        <input type="hidden" name="car_manufacturer_type_id_hdn" value="<?php echo $car_manufacturer_type_id; ?>" /> 
+                                        <?php
+                                    }    
+                                ?>
+                                <select name="car_manufacturer_type_id" id="car_manufacturer_type_id" style="width: 200px;" <?php echo $disabled; ?>> 
+                                    <option value="">-- Select --</option>
+                                    <?php foreach($car_types as $key=>$val){
+                                            $selected = '';  
+                                            if($car_manufacturer_type_id == $key){
+                                                $selected = " selected = 'selected' ";  
+                                            }    
+                                        ?>
+                                    <option value="<?php echo $key; ?>" <?php echo $selected; ?>><?php echo $val; ?></option>
+                                    <?php } ?>
+                                </select>
+                            </td>
+                            <td class="label">
+                                <input name='counter[]' value='0' type='hidden'> 
+                                <select name="car_bulb_location_0" id="car_bulb_location_0" style="width: 200px;"> 
+                                    <option value="">-- Select --</option>
+                                    <?php foreach($car_location as $key=>$val){?>
+                                    <option value="<?php echo $key; ?>"><?php echo $val; ?></option>
+                                    <?php } ?>
+                                </select>
+                            </td>
+                            <td class="label" align="left" id="products_sku_0" colspan="2"><input type="text" name="product_sku_0[]" id="product_sku_0" class="input-text" onblur="Checkproductsku(this.value)"></td> 
+                            <td class="label" align="right"><button type="button" class="scalable add" onclick="addproducts(0);";><span>ADD PRODUCT</span></button></td>  
+                        </tr> 
+                    </tbody>
+                </table>        
+            </div>
+        </div>
+    </div>
+</form>
+</div>  
+<div id="loading-mask" style="display:none">
+    <p class="loader" id="loading_mask_loader"><img src="<?php echo $this->getSkinUrl('images/ajax-loader-tr.gif') ?>" alt="<?php echo Mage::helper('adminhtml')->__('Loading...') ?>"/><br/><?php echo Mage::helper('adminhtml')->__('Please wait...') ?></p>
+</div> 
+
+<?php 
+    //echo "<pre>";print_r($automotivebulbs);exit;
+    foreach($automotivebulbs as $key=>$value){
+        
+        if($key == 0){
+         ?>
+            <script type="text/javascript" language="javascript"> 
+                 selectbox  = document.getElementById("car_bulb_location_0");
+                 for (var i=0; i < selectbox.length; i++) 
+                 {
+                    if (selectbox[i].value == "<?php echo $value['location_id']; ?>") 
+                    {
+                        selectbox[i].selected = true;
+                    }
+                 }
+            
+            </script>
+        <?php
+            if(!in_array($value['location_id'],$location_aray)){    
+        ?>
+                <script type="text/javascript" language="javascript">  
+                    var txt=document.getElementsByName("product_sku_0[]");
+                    txt[0].value = '<?php echo $value['sku']; ?>';                   
+                </script>     
+        <?php
+            }
+            else{
+         ?>
+                <script type="text/javascript" language="javascript">  
+                    addproducts(0,'<?php echo $value['sku']; ?>');
+                </script>     
+        <?php        
+            }
+        }   
+        else{
+            if(!in_array($value['location_id'],$location_aray)){
+        ?>
+            <script type="text/javascript" language="javascript"> 
+                    addmore('<?php echo $value['location_id']; ?>'); 
+                    var txt=document.getElementsByName("product_sku_"+(count-1)+"[]");
+                    txt[0].value = '<?php echo $value['sku']; ?>';                   
+            
+            </script>     
+        <?php 
+            }
+            else{
+         ?>
+                <script type="text/javascript" language="javascript">  
+                    addproducts((count-1),'<?php echo $value['sku']; ?>');
+                </script>     
+        <?php        
+            }
+        }
+        
+        $location_aray[$key] = $value['location_id'];
+    } 
+?> 

@@ -1,0 +1,147 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Ebulb_Customsearch>
+            <version>0.1.1</version>
+        </Ebulb_Customsearch>
+    </modules>
+    
+    <admin>
+        <routers>
+            <customsearch>  
+                <use>admin</use>
+                <args>
+                    <module>Ebulb_Customsearch</module>  
+                    <frontName>customsearch</frontName>
+                </args>
+            </customsearch>
+        </routers>
+    </admin>
+    
+    <global>
+        <models> 
+            <customsearch>
+                <class>Ebulb_Customsearch_Model</class>
+                <resourceModel>customsearch_mysql4</resourceModel>
+            </customsearch>
+            
+            <customsearch_mysql4>
+                <class>Ebulb_Customsearch_Model_Mysql4</class>
+                <entities>  
+                    <searchattributeentity> 
+                        <table>search_attribute_entity</table>
+                    </searchattributeentity>
+                    <searchattributeentityint> 
+                        <table>search_attribute_entity_int</table>
+                    </searchattributeentityint>
+                </entities>
+            </customsearch_mysql4>
+        </models>
+        
+        <resources>
+            <customsearch_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </customsearch_write>
+            <customsearch_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </customsearch_read>
+            <customsearch_setup>
+                <setup>
+                    <module>Ebulb_Customsearch</module>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </customsearch_setup> 
+        </resources>
+        
+        <blocks>
+            <customsearch>
+                <class>Ebulb_Customsearch_Block</class>
+            </customsearch>
+        </blocks>
+        
+        <helpers>
+            <customsearch>
+                  <class>Ebulb_Customsearch_Helper</class>
+            </customsearch>
+        </helpers>
+    </global>
+    
+    <adminhtml>
+        <menu>
+            <catalog module="customsearch">
+                <children>
+                    <customsearch translate="title" module="customsearch">
+                        <title>Manage Custom Search</title>  
+                        <sort_order>505</sort_order>
+                        <action>customsearch/adminhtml_searchattribute</action>      
+                            <!--<children>
+                                <search_attribute module="customsearch">
+                                    <title>Manage Attribute Search</title>
+                                    <sort_order>0</sort_order>
+                                    <action>customsearch/adminhtml_searchattribute</action> 
+                                </search_attribute>
+                            </children>--> 
+                    </customsearch>
+                </children>    
+            </catalog>    
+        </menu>
+        <acl>
+            <resources>
+                <all>
+                    <title>Allow Everything</title>
+                </all>
+                <admin>
+                    <children>
+                        <catalog>
+                            <children>     
+                                <customsearch>
+                                    <title>Custom Search Attribute Module</title>
+                                    <sort_order>10</sort_order>
+                                </customsearch>
+                            </children>
+                        </catalog> 
+                    </children>
+                </admin>
+            </resources>
+        </acl>
+        <layout>
+            <updates>
+                <customsearch>
+                    <file>customsearch.xml</file>
+                </customsearch>
+            </updates>
+        </layout>
+    </adminhtml>
+    
+    <frontend>
+        <routers>
+            <Ebulb_Customsearch>
+                <use>standard</use>
+                <args>
+                    <module>Ebulb_Customsearch</module>
+                    <frontName>customsearch</frontName>
+                </args>
+            </Ebulb_Customsearch>
+        </routers>
+        
+        <layout>
+            <updates>
+                <customsearch>
+                    <file>customsearch.xml</file>
+                </customsearch>
+            </updates>
+        </layout>
+        
+        <customsearch>
+            <per_page_values>5,10,20,50</per_page_values>
+        </customsearch>
+        
+    </frontend>
+    
+</config>

@@ -1,0 +1,306 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Ebulb_Purchase>
+            <version>0.1.5</version>
+        </Ebulb_Purchase>
+    </modules>
+    
+    <admin>
+        <routers>
+            <purchase>
+                <!-- should be set to "admin" when overloading admin stuff (?) -->
+                <use>admin</use>
+                <args>
+                    <module>Ebulb_Purchase</module>
+                    <!-- This is used when "catching" the rewrite above -->
+                    <frontName>purchase</frontName>
+                </args>
+            </purchase>
+        </routers>
+    </admin>
+
+    <frontend>
+        <routers>
+            <purchase>
+                <use>standard</use>
+                <args>
+                    <module>Ebulb_Purchase</module>
+                    <frontName>purchase</frontName>
+                </args>
+            </purchase>
+        </routers>
+    </frontend>
+    
+    <global>
+        <models> 
+            <purchase>
+                <class>Ebulb_Purchase_Model</class>
+                <resourceModel>purchase_mysql4</resourceModel>
+            </purchase>
+            
+            <purchase_mysql4>
+                <class>Ebulb_Purchase_Model_Mysql4</class>
+                <entities>
+                    <vendor> 
+                        <table>po_vendor</table>
+                    </vendor> 
+                     <contact> 
+                        <table>po_vendor_contact</table>
+                    </contact>
+                    <product> 
+                        <table>po_vendor_product</table>
+                    </product>
+                    <orderitem> 
+                        <table>po_order_item</table>
+                    </orderitem>
+                    <order> 
+                        <table>po_order</table>
+                    </order> 
+                    <receipt> 
+                        <table>po_receipt</table>
+                    </receipt>
+                    <receiptitem> 
+                        <table>po_receipt_item</table>
+                    </receiptitem>
+                    <stockmovement> 
+                        <table>po_stock_movement</table>
+                    </stockmovement>
+                    <vendorcontact> 
+                        <table>po_vendor_contact</table>
+                    </vendorcontact>
+                    <vendorproduct> 
+                        <table>po_vendor_product</table>
+                    </vendorproduct>
+                    <invoice> 
+                        <table>po_invoice</table>
+                    </invoice>
+                    <salesorderqty> 
+                        <table>sales_flat_order_item</table>
+                    </salesorderqty>
+                </entities>
+            </purchase_mysql4>
+        </models>
+        
+        <resources>
+            <purchase_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </purchase_write>
+            <purchase_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </purchase_read>
+            <purchase_setup>
+                <setup>
+                    <module>Ebulb_Purchase</module>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </purchase_setup>
+        </resources>
+        
+        <blocks>
+            <purchase>
+                <class>Ebulb_Purchase_Block</class>
+            </purchase>
+        </blocks>
+        
+        <helpers>
+            <purchase>
+                  <class>Ebulb_Purchase_Helper</class>
+            </purchase>
+        </helpers>
+
+        <events>
+           <purchase_order_receipt_update>
+             <observers>
+                <purchase>
+                    <type>singleton</type>
+                    <class>purchase/observer</class>
+                    <method>processReceiptUpdateEvent</method>
+                </purchase>
+             
+             </observers>
+           </purchase_order_receipt_update>
+           
+           <purchase_order_refresh_status>
+             <observers>
+                <purchase>
+                    <type>singleton</type>
+                    <class>purchase/observer</class>
+                    <method>processOrderRefreshStatusEvent</method>
+                </purchase>
+             
+             </observers>
+           </purchase_order_refresh_status>           
+           
+           <purchase_order_refresh_fee>
+             <observers>
+                <purchase>
+                    <type>singleton</type>
+                    <class>purchase/observer</class>
+                    <method>processOrderRefreshFeeEvent</method>
+                </purchase>
+             
+             </observers>
+           </purchase_order_refresh_fee>        
+        
+ 
+           <purchase_order_refresh_poqty>
+             <observers>
+                <purchase>
+                    <type>singleton</type>
+                    <class>purchase/observer</class>
+                    <method>processOrderRefreshPoqtyEvent</method>
+                </purchase>
+             
+             </observers>
+           </purchase_order_refresh_poqty> 
+           
+                  
+         </events>
+
+    </global>
+    
+    
+    <default>
+        <purchase>
+            <configuration>
+                <order_payment_method>Check,Credit Card,Cash On Delivery,Money Order</order_payment_method>
+                <order_carrier>Calberson,Chronopost,Colissimo,Cooljet,DHL,FEDEX,TAT Express,TNT,UPS,Enlevement</order_carrier>
+            </configuration>
+	    <general>
+	    		<header_text></header_text>
+	    		<footer_text></footer_text>
+                        <pdf_comment></pdf_comment>
+	    </general>
+        </purchase>
+    </default>             
+    
+    <adminhtml>
+        <menu>
+            <purchase translate="title" module="purchase">
+                <title>Purchase</title>
+                <children>
+                    <purchase_orders translate="title" module="purchase">
+                        <title>Purchase Orders</title>
+                        <action>purchase/orders/list</action>
+                    </purchase_orders>
+                    <purchase_inventory translate="title" module="purchase">
+                        <title>Inventory</title>
+                        <action>purchase/adminhtml_inventory/</action>
+                    </purchase_inventory> 
+                    <purchase_inventorycost translate="title" module="purchase">
+                        <title>Inventory Cost</title>
+                        <action>purchase/adminhtml_inventorycost/</action>
+                    </purchase_inventorycost>
+                    <purchase_vendor translate="title" module="purchase">
+                        <title>Vendors</title>
+                        <action>purchase/adminhtml_vendor</action>
+                    </purchase_vendor>
+                    <purchase_vendorsproduct translate="title" module="purchase">
+                        <title>Vendor's Products</title>
+                        <action>purchase/adminhtml_vendorsproduct/</action>
+                    </purchase_vendorsproduct> 
+                    <purchase_contact translate="title" module="purchase">
+                        <title>Contacts</title>
+                        <action>purchase/adminhtml_contact</action>
+                    </purchase_contact>  
+                    <purchase_tools translate="title" module="purchase">
+                        <title>Tools</title>
+                        <children>
+                            <mass_stock_editor translate="title" module="purchase">
+                                <title>Mass Stock Editor</title>
+                                <action>purchase/adminhtml_tools/massstockeditor</action>
+                            </mass_stock_editor>        
+                            <stock_movement_list translate="title" module="purchase">
+                                 <title>All Stock Movement</title>
+                                 <action>purchase/adminhtml_stockmovement/</action>
+                            </stock_movement_list>
+                        </children>
+                    </purchase_tools>
+                </children>
+                <sort_order>90</sort_order>
+            </purchase>
+        </menu> 
+        
+        <acl>
+            <resources>
+                <all>
+                        <title>Allow Everything</title>
+                </all>
+                <admin>
+                    <children>
+                        <purchase>
+                            <title>Purchase Module</title>
+                            <sort_order>10</sort_order>
+                            <children>
+                                <purchase_orders translate="title">
+                                    <title>Purchase Orders</title>
+                                    <sort_order>0</sort_order>
+                                </purchase_orders>
+                                <purchase_inventory translate="title">
+                                    <title>Inventory</title>
+                                    <sort_order>10</sort_order>
+                                </purchase_inventory>
+                                <purchase_inventorycost translate="title">
+                                    <title>Inventory Cost</title>
+                                    <sort_order>15</sort_order>
+                                </purchase_inventorycost>
+                                <purchase_vendor translate="title">
+                                    <title>Vendors</title>
+                                    <sort_order>20</sort_order>
+                                </purchase_vendor>
+                                <purchase_vendorsproduct translate="title">
+                                    <title>Vendors' Product</title>
+                                    <sort_order>25</sort_order>
+                                </purchase_vendorsproduct>
+                                <purchase_contact translate="title">
+                                    <title>Contacts</title>
+                                    <sort_order>30</sort_order>
+                                </purchase_contact>
+                                <purchase_tools translate="title" module="purchase">
+                                        <title>Tools</title>
+                                        <sort_order>40</sort_order>
+                                        <children>
+                                        <mass_stock_editor translate="title">
+                                                <title>Mass Stock Editor</title>
+                                                <sort_order>10</sort_order>
+                                        </mass_stock_editor>
+                                        <stock_movement_list translate="title">
+                                                <title>All Stock Movement</title>
+                                                <sort_order>20</sort_order>
+                                        </stock_movement_list>
+                                        </children>
+                                </purchase_tools>
+                        </children>
+                        </purchase>
+                        <system>
+                            <children>
+                                <config>
+                                    <children>
+                                        <purchase module="purchase">
+						<title>Purchase</title>
+	                                </purchase>
+                                    </children>
+                                    
+                                </config>
+                            </children>    
+                        </system>
+                    </children>
+                </admin>
+            </resources>
+        </acl>        
+        <layout>
+            <updates>
+                <purchase>
+                    <file>purchase.xml</file>
+                </purchase>
+            </updates>
+        </layout>
+    </adminhtml>
+</config> 

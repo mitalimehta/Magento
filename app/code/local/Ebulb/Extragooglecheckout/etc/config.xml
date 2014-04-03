@@ -1,0 +1,141 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Ebulb_Extragooglecheckout>
+            <version>0.1.0</version>
+        </Ebulb_Extragooglecheckout>
+    </modules>
+    <global>
+        <models>
+            <extragooglecheckout>
+                <class>Ebulb_Extragooglecheckout_Model</class>
+            </extragooglecheckout>
+            
+            <googlecheckout>
+                <rewrite>
+                    <payment>Ebulb_Extragooglecheckout_Model_Payment</payment>
+                    <observer>Ebulb_Extragooglecheckout_Model_Observer</observer>
+                    <api_xml_checkout>Ebulb_Extragooglecheckout_Model_Api_Xml_Checkout</api_xml_checkout>
+                    <api_xml_callback>Ebulb_Extragooglecheckout_Model_Callback</api_xml_callback>
+                </rewrite>
+            </googlecheckout>
+        </models>
+     
+        <admin>
+           <routers>
+               <extragooglecheckout>
+                  <!-- should be set to "admin" when overloading admin stuff (?) -->
+                  <use>admin</use>
+                  <args>
+                      <module>Ebulb_Extragooglecheckout</module>
+                      <!-- This is used when "catching" the rewrite above -->
+                      <frontName>extragooglecheckout</frontName>
+                  </args>
+               </extragooglecheckout>
+            </routers>
+        </admin>
+        
+        <resources>
+            <extragooglecheckout_setup>
+                <setup>
+                    <module>Ebulb_Extragooglecheckout</module>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </extragooglecheckout_setup>
+            
+            <extragooglecheckout_write>
+                <use>core_write</use>
+            </extragooglecheckout_write>
+            <extragooglecheckout_read>
+                <use>core_read</use>
+            </extragooglecheckout_read>
+        </resources>
+        
+       <blocks> 
+         <extragooglecheckout> 
+            <class>Ebulb_Extragooglecheckout_Block</class> 
+         </extragooglecheckout> 
+       </blocks>
+    
+    <helpers>
+            <extragooglecheckout>
+                  <class>Ebulb_Extragooglecheckout_Helper</class>
+            </extragooglecheckout>
+    </helpers>
+                
+    </global>
+    
+    <default>
+        <payment>
+            <extragooglecheckout>
+                <active>1</active>
+                <show_in_website>1</show_in_website>
+                <model>extragooglecheckout/extragooglecheckout</model>
+                <order_status>pending</order_status>
+                <title>Western Union</title>
+                <allowspecific>0</allowspecific>
+            </extragooglecheckout>
+         </payment>
+    </default>
+
+    <adminhtml>       
+        <translate>
+            <modules>
+                <Ebulb_Extragooglecheckout>
+                    <files>
+                        <default>Ebulb_Extragooglecheckout.csv</default>
+                    </files>
+                </Ebulb_Extragooglecheckout>
+            </modules>
+        </translate>
+        
+    </adminhtml>
+ 
+    
+ 
+    <frontend>       
+        <translate>
+            <modules>
+                <Ebulb_Extragooglecheckout>
+                    <files>
+                        <default>Ebulb_Extragooglecheckout.csv</default>
+                    </files>
+                </Ebulb_Extragooglecheckout>
+            </modules>
+        </translate>        
+
+        <routers>
+            <Ebulb_Extragooglecheckout>
+                <use>standard</use>
+                <args>
+                    <module>Ebulb_Extragooglecheckout</module>
+                    <frontName>extragooglecheckout</frontName>
+                </args>
+            </Ebulb_Extragooglecheckout>
+        </routers>
+        
+        <events>
+            <sales_order_shipment_track_save_after>
+                <observers>
+                    <googlecheckout>
+                        <type>model</type>
+                        <class>extragooglecheckout/observer</class>
+                        <method>salesOrderShipmentTrackSaveAfter</method>
+                    </googlecheckout>
+                </observers>
+            </sales_order_shipment_track_save_after>
+            <sales_order_shipment_save_after>
+                <observers>
+                    <googlecheckout>
+                        <type>model</type>
+                        <class>extragooglecheckout/observer</class>
+                        <method>salesOrderShipmentSaveAfter</method>
+                    </googlecheckout>
+                </observers>
+            </sales_order_shipment_save_after>
+        </events>
+    </frontend>
+    
+</config>

@@ -1,0 +1,162 @@
+ 
+<style>
+.lien-popup span
+{								   
+    position       :  absolute;
+    top            :  -2000em;
+    left           :  -2000em;
+    width          :  1px;
+    height         :  1px;
+    overflow       :  hidden; 
+    background     :  #ffffe1;   /* Définition du fond, sinon on a le même que notre lien */
+    border         :  1px solid #000000; /* Définition des bordures */
+    text-decoration: none;
+    color: black;
+    text-align: left;
+}  
+
+
+.lien-popup:hover span
+{								   
+	top        :  auto;
+    left       :  auto;
+    width      :  200px;
+    height     :  auto;
+    overflow   :  visible;
+}  
+
+</style>
+
+<input type="hidden" id="po_order_id" name="po_order_id" value="<?php echo $this->getOrder()->getId(); ?>">
+<div class="entry-edit">
+    
+        <div class="grid">
+	        <table cellspacing="0" class="data" width="100%" cellspacing="0">
+	        	<thead>
+					<tr class="headings">
+			        	<th class="a-center">Picture</th>
+			        	<th class="a-center">Infos</th>
+			        	<th class="a-center">Sku</th>
+			        	<th>Description</th>
+			        	<th class="a-center"><?php echo$this->__('Vendor Ref #')?></th>
+			        	<th class="a-center"><?php echo$this->__('Qty')?></th>
+			        	<th class="a-center"><?php echo$this->__('Delivered Qty')?></th>
+			        	<th class="a-center"><?php echo$this->__('Avg Cost ')?></th>
+                        <th class="a-center"><?php echo$this->__('Vendor Unit Cost')?></th>
+                        <th class="a-center"><?php echo$this->__('Last Vendor Cost Price')?></th>
+			        	<th class="a-center"><?php echo$this->__('Subtotal')?></th>
+                        <?php
+                        if ($this->getOrder()->isStatusComplete() || $this->getOrder()->isStatusCanceled() ) {
+                            
+                        } else{
+                        
+                            echo '<th class="a-center">'.$this->__('Delete').'</th>';
+			             } ?>
+                    </tr>
+		       </thead>   
+		       <tbody>
+			        <?php
+						//Affiche la liste des lignres commande
+						$collection = $this->getProducts();
+						if (sizeof($collection) == 0)
+						{
+							echo '<tr><td colspan="13" align="center">'.$this->__('No items').'</td></tr>';
+						}
+						foreach ($collection as $item)
+						{
+                            $venderProduct = Mage::getModel("purchase/vendorproduct")->loadByProductId($this->getOrder()->getVendorId() , $item->getProductId() );
+                            
+							echo '<tr>';
+							
+							//Définit les détails de beosin d'appro sur le produit
+							$product = Mage::getModel('catalog/product')->load($item->getProductId());
+							$productImage = Mage::getBaseUrl('media').'catalog/product'.$product->getsmall_image(); //mage::helper('catalog/image')->init($product, 'small_image')->resize(50, 50);
+							echo '<td><img src="'.$productImage.'" width="50" height="50"></td>';
+							echo '<td align="center">';
+							//rajoute le span pour le popup
+							echo '<a href="#" class="lien-popup">';
+							echo '<img src="'.$this->getSkinUrl('images/note_msg_icon.gif').'">';
+							//echo '<span>'.nl2br($details).'</span>';
+							echo '</a>';
+							echo '</td>';
+							
+							echo '<td><a href="'.$this->getUrl('purchase/adminhtml_inventory/edit/',
+array('id'=>$item->getProductId(),"ReturnUrl"=>base64_encode($this->helper('core/url')->getCurrentUrl()))).'/">'.$item->getSku().'</a></td>';
+							
+                            
+                            echo '<td><input type="hidden" id="product_id_'.$item->getId().'" name="product_id_'.$item->getId().'" value="'.$item->getProductId().'">';
+                            if ($this->getOrder()->isStatusComplete() || $this->getOrder()->isStatusCanceled() ) {
+                                echo '<input size="40" type="hidden" id="product_name_'.$item->getId().'" name="product_name_'.$item->getId().'" value="'.$item->getProductName().'">';
+                                echo $item->getProductName();
+                            } else {
+                                echo '<input size="40" type="text" id="product_name_'.$item->getId().'" name="product_name_'.$item->getId().'" value="'.$item->getProductName().'">';
+                            }
+                            echo'</td>';
+
+							echo '<td align="center">';
+                            if ($this->getOrder()->isStatusComplete() || $this->getOrder()->isStatusCanceled() ) {
+                                echo $venderProduct->getVendorSku();
+                            } else {
+                                echo '<input size="11" type="text" id="vendor_sku_'.$item->getId().'" name="vendor_sku_'.$item->getId().'" value="'.$venderProduct->getVendorSku().'">';                        
+                            }
+                            echo '</td>';
+							echo '<td align="center">';
+                            if ($this->getOrder()->isStatusComplete() || $this->getOrder()->isStatusCanceled() ) {
+                                echo $item->getProductQty();
+                                echo '<input type="hidden" id="product_qty_'.$item->getId().'" name="product_qty_'.$item->getId().'" value="'.$item->getProductQty().'">';
+                            } else {
+                                //echo '<input size="2" type="text" id="product_qty_'.$item->getId().'" name="product_qty_'.$item->getId().'" value="'.$item->getProductQty().'">';                        
+                                echo '<input type="text" id="product_qty_'.$item->getId().'" name="product_qty_'.$item->getId().'" value="'.$item->getProductQty().'"  >';
+                            }
+                            
+                            echo '</td>';
+							echo '<td align="center">'.$item->getQtyReceipted().'</td>';
+
+							echo '<td align="center">'.$this->getOrder()->getCurrency()->formatTxt($venderProduct->getAvgCost()).'</td>';
+							echo '<td align="center">';
+                            if ($this->getOrder()->isStatusComplete() || $this->getOrder()->isStatusCanceled() ) {
+                                echo number_format($venderProduct->getUnitCost(),2,".",",");
+                                echo '<input type="hidden" id="product_price_'.$item->getId().'" name="product_price_'.$item->getId().'" value="'.$venderProduct->getUnitCost().'">';
+                            } else {
+                                echo '<input size="6" type="text" id="product_price_'.$item->getId().'" name="product_price_'.$item->getId().'" value="'.number_format($venderProduct->getUnitCost(),2,".",",").'" style="text-align:right">';
+                            }
+                            echo '</td>';
+                            echo '<td align="center">';
+							$lastPrice = $this->GetLastPriceWithoutFees($item->getProductId()); 
+							$lastPriceCurrency = $this->GetLastPriceWithoutFees($item->getpop_product_id()) * $this->getOrder()->getpo_currency_change_rate(); 
+							echo $this->getOrder()->getCurrency()->formatTxt($lastPriceCurrency);
+							echo '&nbsp;</td>';
+                            echo '<td align="center">'.$this->getOrder()->getCurrency()->formatTxt($item->getSubtotal()).'</td>';
+							if ($this->getOrder()->isStatusComplete() || $this->getOrder()->isStatusCanceled() ) {
+                                
+                            } else {
+                                echo '<td align="center"><input type="checkbox" id="delete_'.$item->getId().'" name="delete_'.$item->getId().'" value="1"></td>';
+							}
+							echo '</tr>';
+						}
+					?>
+				</tbody>
+			</table>
+		</div>
+</div>
+
+<div align="right">
+<table border="0">
+<tr>
+	<td><h3><?php echo $this->__('Subtotal'); ?>&nbsp;&nbsp;&nbsp;</h3></td>
+	<td width="100" align="right"><h3><?php echo $this->getOrder()->getCurrency()->formatTxt($this->getOrder()->getSubtotal()) ?></h3></td>
+</tr>
+<tr>
+    <td><h3><?php echo $this->__('Shipping fee'); ?>&nbsp;&nbsp;&nbsp;</h3></td>
+    <td width="100" align="right"><h3><?php echo $this->getOrder()->getCurrency()->formatTxt($this->getOrder()->getShippingPrice()) ?></h3></td>
+</tr>
+<tr>
+    <td><h3><?php echo $this->__('Toll'); ?>&nbsp;&nbsp;&nbsp;</h3></td>
+    <td width="100" align="right"><h3><?php echo $this->getOrder()->getCurrency()->formatTxt($this->getOrder()->getAdjustFee()) ?></h3></td>
+</tr>
+<tr>
+	<td><h3><?php echo $this->__('Total'); ?>&nbsp;&nbsp;&nbsp;</h3></td>
+	<td width="100" align="right"><h3><?php echo $this->getOrder()->getCurrency()->formatTxt($this->getOrder()->getTotal()) ?></h3></td>
+</tr>
+</table>
+</div>

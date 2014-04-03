@@ -1,0 +1,179 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <newreports_adminhtml_salesreport_product>
+        <reference name="content">
+            <block type="newreports/adminhtml_salesreport_product" template="newreports/grid/container.phtml" name="adminhtml.salesreport.product" >
+                <block type="adminhtml/store_switcher" template="report/store/switcher/enhanced.phtml" name="store.switcher">
+                    <action method="setStoreVarName"><var_name>store_ids</var_name></action>
+                </block>
+                <block type="newreports/adminhtml_filter_form" name="adminhtml.salesreport.filter.form">
+                    <action method="addReportTypeOption" translate="value">
+                        <key>created_at_order</key>
+                        <value>Created At Order</value>
+                    </action>
+                    <action method="addReportTypeOption" translate="value">
+                        <key>updated_at_order</key>
+                        <value>Updated At Order</value>
+                    </action>
+                </block>  
+            </block> 
+        </reference>
+    </newreports_adminhtml_salesreport_product>
+    
+    <newreports_adminhtml_salesreport_productbyrange>
+        <reference name="content">
+            <block type="newreports/adminhtml_salesreport_productbyrange" template="newreports/grid/container.phtml" name="adminhtml.salesreport.productbyrange" >
+                <block type="adminhtml/store_switcher" template="report/store/switcher/enhanced.phtml" name="store.switcher">
+                    <action method="setStoreVarName"><var_name>store_ids</var_name></action>
+                </block>
+                <block type="newreports/adminhtml_salesreport_productbyrange_filter_form" name="adminhtml.salesreport.productbyrange.filter.form">
+                    <action method="addReportTypeOption" translate="value">
+                        <key>created_at_order</key>
+                        <value>Created At Order</value>
+                    </action>
+                    <action method="addReportTypeOption" translate="value">
+                        <key>updated_at_order</key>
+                        <value>Updated At Order</value>
+                    </action>
+                </block>  
+            </block> 
+        </reference>
+    </newreports_adminhtml_salesreport_productbyrange>
+    
+    <newreports_adminhtml_salesreport_day>
+        <reference name="content">
+            <block type="newreports/adminhtml_salesreport_day" template="newreports/grid/container.phtml" name="adminhtml.salesreport.day" >
+                <block type="adminhtml/store_switcher" template="report/store/switcher/enhanced.phtml" name="store.switcher">
+                    <action method="setStoreVarName"><var_name>store_ids</var_name></action>
+                </block>
+                <block type="newreports/adminhtml_salesreport_day_filter_form" name="adminhtml.salesreport.day.filter.form">
+                    <action method="addReportTypeOption" translate="value">
+                        <key>created_at_order</key>
+                        <value>Created At Order</value>
+                    </action>
+                    <action method="addReportTypeOption" translate="value">
+                        <key>updated_at_order</key>
+                        <value>Updated At Order</value>
+                    </action>
+                </block>  
+            </block> 
+        </reference>
+    </newreports_adminhtml_salesreport_day>
+    
+    
+    <newreports_adminhtml_salesreport_salesperson>
+        <reference name="content">
+            <block type="newreports/adminhtml_salesreport_salesperson" template="newreports/grid/salescontainer.phtml" name="adminhtml.salesreport.salesperson" >
+                <!--<block type="adminhtml/store_switcher" template="report/store/switcher/enhanced.phtml" name="store.switcher">
+                    <action method="setStoreVarName"><var_name>store_ids</var_name></action>
+                </block>-->
+                <block type="newreports/adminhtml_salesreport_salesperson_total" name="adminhtml.salesreport.salesperson.total" template="newreports/salespersontotals.phtml" ></block>
+                <block type="newreports/adminhtml_salesreport_salesperson_filter_form" name="adminhtml.salesreport.salesperson.filter.form">
+                    <action method="addReportTypeOption" translate="value">
+                        <key>created_at_order</key>
+                        <value>Created At Order</value>
+                    </action>
+                    <action method="addReportTypeOption" translate="value">
+                        <key>updated_at_order</key>
+                        <value>Updated At Order</value>
+                    </action>
+                </block> 
+                <block type="newreports/adminhtml_salesreport_total_grid" name="adminhtml.salesreport.salesperson.total.grid"> 
+                </block> 
+            </block> 
+        </reference>
+    </newreports_adminhtml_salesreport_salesperson>
+    
+    <newreports_adminhtml_salesreport_shiptoday>
+        <reference name="content">
+            <block type="newreports/adminhtml_salesreport_shiptoday" template="newreports/grid/container.phtml" name="adminhtml.salesreport.shiiptoday" >
+                <block type="adminhtml/store_switcher" template="report/store/switcher/enhanced.phtml" name="store.switcher">
+                    <action method="setStoreVarName"><var_name>store_ids</var_name></action>
+                </block>
+                <block type="newreports/adminhtml_salesreport_shiptoday_shipinsurance" name="adminhtml.salesreport.shiptoday.shipinsurance" template="newreports/shipinsurance.phtml"></block>
+                <block type="newreports/adminhtml_salesreport_shiptoday_shipinsurancetotal" name="adminhtml.salesreport.shiptoday.shipinsurancetotal" template="newreports/shipinsurancetotal.phtml"></block>
+                <block type="newreports/adminhtml_salesreport_shiptoday_shiptodaytotal" name="adminhtml.salesreport.shiptoday.shiptodaytotal" template="newreports/shiptodaytotal.phtml"></block>
+                <block type="newreports/adminhtml_salesreport_shiptoday_filter_form" name="adminhtml.salesreport.shiptoday.filter.form">
+                    <action method="addReportTypeOption" translate="value">
+                        <key>created_at_order</key>
+                        <value>Created At Order</value>
+                    </action>
+                    <action method="addReportTypeOption" translate="value">
+                        <key>updated_at_order</key>
+                        <value>Updated At Order</value>
+                    </action>
+                </block> 
+               <!--<block type="newreports/adminhtml_shiptoday_shiptodaytotal_grid" name="adminhtml.salesreport.shiptoday.shiptodaytotal.grid">
+               <block type="newreports/adminhtml_shiptoday_shipinsurancetotal_grid" name="adminhtml.salesreport.shiptoday.shipinsurancetotal.grid"> -->
+            </block> 
+        </reference>
+    </newreports_adminhtml_salesreport_shiptoday>
+    
+    <newreports_adminhtml_salesreport_customer>
+        <reference name="content">
+            <block type="newreports/adminhtml_salesreport_customer" template="newreports/grid/container.phtml" name="adminhtml.salesreport.customer" >
+                <block type="adminhtml/store_switcher" template="report/store/switcher/enhanced.phtml" name="store.switcher">
+                    <action method="setStoreVarName"><var_name>store_ids</var_name></action>
+                </block>
+                <block type="newreports/adminhtml_salesreport_customer_filter_form" name="adminhtml.salesreport.customer.filter.form">
+                    <action method="addReportTypeOption" translate="value">
+                        <key>created_at_order</key>
+                        <value>Created At Order</value>
+                    </action>
+                    <action method="addReportTypeOption" translate="value">
+                        <key>updated_at_order</key>
+                        <value>Updated At Order</value>
+                    </action>
+                </block>  
+            </block> 
+        </reference>
+    </newreports_adminhtml_salesreport_customer>    
+    
+    <newreports_adminhtml_salesreport_tax>
+        <reference name="content">
+            <block type="newreports/adminhtml_salesreport_tax" template="newreports/grid/container.phtml" name="adminhtml.salesreport.tax" >
+                <block type="adminhtml/store_switcher" template="report/store/switcher/enhanced.phtml" name="store.switcher">
+                    <action method="setStoreVarName"><var_name>store_ids</var_name></action>
+                </block>
+                <block type="newreports/adminhtml_salesreport_tax_filter_form" name="adminhtml.salesreport.tax.filter.form">
+                    <action method="addReportTypeOption" translate="value">
+                        <key>created_at_order</key>
+                        <value>Created At Order</value>
+                    </action>
+                    <action method="addReportTypeOption" translate="value">
+                        <key>updated_at_order</key>
+                        <value>Updated At Order</value>
+                    </action>
+                </block>  
+            </block> 
+        </reference>
+    </newreports_adminhtml_salesreport_tax>
+   
+   
+    <newreports_adminhtml_statistics_homepagelinks>
+        <reference name="content">
+            <block type="newreports/adminhtml_statistics_homepagelinks" template="newreports/grid/container.phtml" name="adminhtml.statistics.homepagelinks" >
+                <block type="adminhtml/store_switcher" template="report/store/switcher/enhanced.phtml" name="store.switcher">
+                    <action method="setStoreVarName"><var_name>store_ids</var_name></action>
+                </block>
+                <block type="newreports/adminhtml_statistics_homepagelinks_filter_form" name="adminhtml.statistics.homepagelinks.filter.form">
+                    <action method="addReportTypeOption" translate="value">
+                        <key>created_at_order</key>
+                        <value>Created At Order</value>
+                    </action>
+                    <action method="addReportTypeOption" translate="value">
+                        <key>updated_at_order</key>
+                        <value>Updated At Order</value>
+                    </action>
+                </block>  
+            </block> 
+        </reference>
+    </newreports_adminhtml_statistics_homepagelinks>
+    
+    
+    <!--<newreports_autocomplete_autocomplete>
+        <reference name="content">
+            <block type="newreports/adminhtml_autocomplete_autocomplete" template="system/autocompltesku.phtml" name="autocomplete.autocomplete.sku" />
+        </reference>
+    </newreports_autocomplete_autocomplete> -->
+</layout> 

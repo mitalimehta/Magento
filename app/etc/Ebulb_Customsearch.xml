@@ -1,0 +1,10 @@
+<?xml version="1.0"?> 
+<config>
+    <modules>
+        <Ebulb_Customsearch>
+            <active>true</active> 
+            <codePool>local</codePool>
+            <version>0.3</version>
+        </Ebulb_Customsearch>
+    </modules>
+</config> 

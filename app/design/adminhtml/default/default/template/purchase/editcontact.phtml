@@ -1,0 +1,88 @@
+<?php 
+
+$contact = $this->getContact();
+ 
+?>
+<div style="<?php if($contact->getVendorContactId() == '') { echo ';display: none;"'; } ?>" id="div_contact_edit_<?php echo $contact->getVendorContactId(); ?>">
+<form id="edit_form_upgrade_<?php  echo $contact->getVendorContactId(); ?>" name="edit_form_upgrade_<?php  echo $contact->getVendorContactId(); ?>" >
+<fieldset id="my-fieldset">
+
+
+<input id="form_key" name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>" />
+<input id="parent_id" name="parent_id" type="hidden" value="<?php echo $this->getParentId(); ?>" />
+<input id="contact_id" name="contact_id" type="hidden" value="<?php echo $contact->getVendorContactId(); ?>" />
+
+<table width="100%" border="0" class="form-list">
+ 
+  <tr>
+    <td class="label"><?php echo $this->__('First Name ')?><span class="required">*</span></td>
+    <td class="value"><input type="text" name="first_name" id="first_name" class="input-text" value="<?php echo $contact->getFirstName(); //echo number_format((float)$this->getUpgrade()->getDiscount(),2,".",",") ?>"></td>
+  </tr>
+  
+  <tr>
+    <td class="label"><?php echo $this->__('Middle Name ')?></td>
+    <td class="value"><input type="text" name="middle_name" id="middle_name" class="input-text"  value="<?php echo $contact->getMiddleName(); //echo number_format((float)$this->getUpgrade()->getDiscount(),2,".",",") ?>"></td>
+  </tr>
+  
+  <tr>
+    <td class="label"><?php echo $this->__('Last Name ')?><span class="required">*</span></td>
+    <td class="value"><input type="text" name="last_name" id="last_name" class="input-text"  value="<?php echo $contact->getLastName(); //echo number_format((float)$this->getUpgrade()->getDiscount(),2,".",",") ?>"></td>
+  </tr>
+  
+  
+   <tr>
+    <td class="label"><?php echo $this->__('Email ')?><span class="required">*</span></td>
+    <td class="value"><input type="text" name="email" id="email" class="input-text"  value="<?php echo $contact->getEmail(); //echo number_format((float)$this->getUpgrade()->getDiscount(),2,".",",") ?>"></td>
+  </tr>
+  
+   <tr>
+    <td class="label"><?php echo $this->__('Website ')?></td>
+    <td class="value"><input type="text" name="website" id="website" class="input-text"  value="<?php echo $contact->getWebsite(); //echo number_format((float)$this->getUpgrade()->getDiscount(),2,".",",") ?>"></td>
+  </tr>
+  
+  <tr>
+    <td class="label"><?php echo $this->__('Telephone1 ')?><span class="required">*</span></td>
+    <td class="value">
+        <input type="text" name="telephone1" id="telephone1" class="input-text"  value="<?php echo $contact->getTelephone1(); //echo number_format((float)$this->getUpgrade()->getDiscount(),2,".",",") ?>">
+    </td>
+    <td>
+        Ext.
+        <input type="text" name="ext1" id="ext1" style="width:130px; border-width:1px; border-style:solid; border-color:#aaa #c8c8c8 #c8c8c8 #aaa; background:#fff; font:12px arial, helvetica, sans-serif;" value="<?php echo $contact->getExt1(); //echo number_format((float)$this->getUpgrade()->getDiscount(),2,".",",") ?>">
+    </td>
+  </tr>
+  
+  <tr>
+    <td class="label"><?php echo $this->__('Telephone2 ')?></td>
+    <td class="value">
+        <input type="text" name="telephone2" id="telephone2" class="input-text"  value="<?php echo $contact->getTelephone2(); //echo number_format((float)$this->getUpgrade()->getDiscount(),2,".",",") ?>">
+    </td>
+    <td>
+        Ext.
+        <input type="text" name="ext2" id="ext2" style="width:130px; border-width:1px; border-style:solid; border-color:#aaa #c8c8c8 #c8c8c8 #aaa; background:#fff; font:12px arial, helvetica, sans-serif;" value="<?php echo $contact->getExt2(); //echo number_format((float)$this->getUpgrade()->getDiscount(),2,".",",") ?>">
+    </td>
+  </tr>
+  
+   <tr>
+    <td class="label"><?php echo $this->__('Cell Phone ')?></td>
+    <td class="value"><input type="text" name="cellphone" id="cellphone" class="input-text"  value="<?php echo $contact->getCellphone(); //echo number_format((float)$this->getUpgrade()->getDiscount(),2,".",",") ?>"></td>
+  </tr>
+  
+   <tr>
+    <td class="label"><?php echo $this->__('Fax ')?></td>
+    <td class="value"><input type="text" name="fax" id="fax" class="input-text"  value="<?php echo $contact->getFax(); //echo number_format((float)$this->getUpgrade()->getDiscount(),2,".",",") ?>"></td>
+  </tr>
+  
+  <tr>
+    <td class="label"><?php echo $this->__('Comments ')?></td>
+    <td class="value"><textarea name="comments" id="comments" class="textarea"><?php echo $contact->getComments();  //echo $this->getUpgrade()->getDescription() ?></textarea></td>
+  </tr>
+  
+  <tr>
+    <td class="label"><?php //echo $this->__('Comments:')?></td>
+    <td class="value"><button onclick="SubmitContactForm('<?php echo $this->getContact()->getVendorContactId(); ?>', '<?php echo $this->getGuid(); ?>','<?php  echo $this->getParentId(); ?>');" class="scalable save" type="button"><span><?php echo $this->__('Save Contact')?></span></button></td></td>
+  </tr>                                                                                                                                                                                                                                               
+</table>
+
+</fieldset>
+</form> 
+</div>

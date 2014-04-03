@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<layout>
+    <default>
+        <reference name="head">
+            <action method="addJs"><script>catalogupgrade/catalogupgrade.js</script></action> 
+            <action method="addItem"><type>skin_css</type><name>css/catalogupgrade.css</name><params/></action>
+        </reference>
+        <reference name="content">
+            <block type="core/template" name="catalogupgradebaseurl" before="-" template="catalogupgrade/baseurl.phtml" />  
+        </reference>
+    </default>
+
+    <catalogupgrade_list> 
+        <reference name="head">
+            <action method="addItem"><type>skin_js</type><name>js/catalogupgrade.js</name><params/></action>
+        </reference>
+        <!-- <reference name="content">
+            <block type="catalogupgrade/grid" name="catalogupgradegrid" template="catalogupgrade/list.phtml">
+                <action method="setTitle"><title>All Tasks / Events</title></action> 
+            </block>
+        </reference> -->
+    </catalogupgrade_list>
+    
+    <catalogupgrade_edit> 
+         <reference name="content">
+            <block type="catalogupgrade/edit" name="catalogupgradeedit" template="catalogupgrade/edit.phtml" />
+        </reference> 
+    </catalogupgrade_edit>
+ 
+ </layout> 

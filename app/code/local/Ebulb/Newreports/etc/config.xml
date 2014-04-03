@@ -1,0 +1,365 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Ebulb_Newreports>
+            <version>0.1.1</version>
+        </Ebulb_Newreports>
+    </modules>
+    
+    <admin>
+        <routers>
+            <newreports>
+                <!-- should be set to "admin" when overloading admin stuff (?) -->
+                <use>admin</use>
+                <args>
+                    <module>Ebulb_Newreports</module>
+                    <!-- This is used when "catching" the rewrite above -->
+                    <frontName>newreports</frontName>
+                </args>
+            </newreports>
+        </routers>
+    </admin>
+
+    <frontend>
+        <routers>
+            <newreports>
+                <use>standard</use>
+                <args>
+                    <module>Ebulb_Newreports</module>
+                    <frontName>newreports</frontName>
+                </args>
+            </newreports>
+        </routers>
+    </frontend>
+    
+    <global>
+        <models> 
+            <newreports>
+                <class>Ebulb_Newreports_Model</class>
+                <resourceModel>newreports_mysql4</resourceModel>
+            </newreports>
+            
+            <newreports_mysql4>
+                <class>Ebulb_Newreports_Model_Mysql4</class>
+                <entities>
+                    <newreports> 
+                        <table>catalog_product_group</table>
+                    </newreports>
+                </entities>
+            </newreports_mysql4>
+        </models>
+        
+        <resources>
+            <newreports_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </newreports_write>
+            <newreports_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </newreports_read>
+            <newreports_setup>
+                <setup>
+                    <module>Ebulb_Newreports</module>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </newreports_setup>
+        </resources>
+        
+        <blocks>
+            <newreports>
+                <class>Ebulb_Newreports_Block</class>
+            </newreports>
+        </blocks>
+        
+        <helpers>
+            <newreports>
+                  <class>Ebulb_Newreports_Helper</class>
+            </newreports>
+        </helpers>
+    </global>
+    
+    <adminhtml>
+         <menu>
+            <report>
+                <children> 
+                    
+                    <salesreports translate="title" module="reports">
+                        <title>Sales Reports</title> 
+                        <sort_order>0</sort_order>
+                            <children>
+                                <items1 module="reports">
+                                    <title>Product Reports</title>
+                                    <sort_order>0</sort_order>
+                                        <children>
+                                            <items11 module="reports">   
+                                                <title>Sales By Product</title>
+                                                <action>newreports/adminhtml_salesreport/product</action>
+                                            </items11>
+                                            <items12 module="reports">   
+                                                <title>Products Sold by Range</title>
+                                                <action>newreports/adminhtml_salesreport/productbyrange</action>
+                                            </items12>
+                                        </children>
+                                </items1> 
+                                <items2 module="reports">
+                                    <title>Sales / Invoice per order</title>
+                                    <sort_order>1</sort_order>
+                                    <action>newreports/adminhtml_salesreport/day</action> 
+                                </items2>
+                                <items3 module="reports">
+                                    <title>Sales per customer</title>
+                                    <sort_order>4</sort_order>
+                                    <action>newreports/adminhtml_salesreport/customer</action>
+                                </items3> 
+                                <items4 module="reports">
+                                    <title>Sales per sales person</title>
+                                    <sort_order>5</sort_order>
+                                    <action>newreports/adminhtml_salesreport/salesperson</action>
+                                </items4> 
+                                <items5 module="reports">
+                                    <title>Sales Tax report</title>
+                                    <sort_order>6</sort_order>
+                                    <action>newreports/adminhtml_salesreport/tax</action>
+                                </items5> 
+                               <!-- <items8 module="reports">
+                                    <title>Upgrade Report</title>
+                                    <sort_order>7</sort_order>
+                                    <action>newreports/adminhtml_salesreport/product</action>
+                                </items8>--> 
+                                <items6 module="reports">
+                                    <title>Ship Today / Insurance / Upgrade Report</title>
+                                    <sort_order>8</sort_order>
+                                    <action>newreports/adminhtml_salesreport/shiptoday</action>
+                                </items6> 
+                                
+                                <items7 module="reports">
+                                    <title>Shipping Summary</title>
+                                    <sort_order>9</sort_order>
+                                    <action>ordershipment/adminhtml_ordershipment/index/</action>
+                                </items7> 
+                                <!--<items10 module="reports">
+                                    <title>Shipping Insurance Report</title>
+                                    <sort_order>9</sort_order>
+                                    <action>newreports/adminhtml_salesreport/product</action>
+                                </items10>-->  
+                                
+                                <!-- hide for now 
+                                <items11 module="reports">
+                                    <title>Salesman Product Shifting Report</title>
+                                    <sort_order>10</sort_order>
+                                    <action>newreports/adminhtml_salesreport/product</action>
+                                </items11>  -->
+                            </children>  
+                    </salesreports>
+                    
+                    <!--<statistics translate="title" module="reports">
+                        <title>Statistics</title> 
+                        <sort_order>0</sort_order>
+                            <children>
+                                <items1 module="reports">
+                                    <title>Homepage Links</title>
+                                    <sort_order>1</sort_order>
+                                    <action>newreports/adminhtml_statistics/homepagelinks</action>
+                                </items1> 
+                            </children>  
+                    </statistics>-->
+                    
+                    
+                    <!--<inventory translate="title" module="reports">
+                        <title>Inventory Reports:</title> 
+                        <sort_order>0</sort_order>
+                            <children>
+                                <items1 module="reports">
+                                    <title>Inventory Summary</title>
+                                    <sort_order>1</sort_order>
+                                    <action>Purchase/Products/List</action>
+                                </items1> 
+                            </children>  
+                    </inventory>-->
+                    
+                    <!-- hide for now  
+                    <inventoryreports translate="title" module="reports">
+                        <title>Inventory Reports</title> 
+                        <sort_order>0</sort_order>
+                            <children>
+                                <items1 module="reports">
+                                    <title>Sales by brand</title>
+                                    <sort_order>0</sort_order>
+                                    <action>newreports/adminhtml_salesreport/product</action>
+                                </items1> 
+                                <items2 module="reports">
+                                    <title>Sales by manufacturer</title>
+                                    <sort_order>1</sort_order>
+                                    <action>newreports/adminhtml_salesreport/product</action>
+                                </items2>
+                                <items3 module="reports">
+                                    <title>Inventory summary</title>
+                                    <sort_order>2</sort_order>
+                                    <action>newreports/adminhtml_salesreport/product</action>
+                                </items3>
+                                <items4 module="reports">
+                                    <title>Inventory count report </title>
+                                    <sort_order>3</sort_order>
+                                    <action>newreports/adminhtml_salesreport/product</action>
+                                </items4> 
+                            </children>  
+                    </inventoryreports>
+                    
+                    
+                    
+                    <purchasingreports translate="title" module="reports">
+                        <title>Purchasing Reports</title> 
+                        <sort_order>0</sort_order>
+                            <children>
+                                <items1 module="reports">
+                                    <title>Sales by vendor</title>
+                                    <sort_order>0</sort_order>
+                                    <action>newreports/adminhtml_salesreport/product</action>
+                                </items1> 
+                                <items2 module="reports">
+                                    <title>Purchase order report</title>
+                                    <sort_order>1</sort_order>
+                                    <action>newreports/adminhtml_salesreport/product</action>
+                                </items2> 
+                                <items3 module="reports">
+                                    <title>Purchase receipt report</title>
+                                    <sort_order>2</sort_order>
+                                    <action>newreports/adminhtml_salesreport/product</action>
+                                </items3>
+                                <items4 module="reports">
+                                    <title>Reorder point report</title>
+                                    <sort_order>3</sort_order>
+                                    <action>newreports/adminhtml_salesreport/product</action>
+                                </items4>
+                                <items5 module="reports">
+                                    <title>Stock status by vendor</title>
+                                    <sort_order>4</sort_order>
+                                    <action>newreports/adminhtml_salesreport/product</action>
+                                </items5>
+                            </children>  
+                    </purchasingreports>
+                    
+                    
+                    
+                    <accountingreports translate="title" module="reports">
+                        <title>Accounting Reports</title> 
+                        <sort_order>0</sort_order>
+                            <children>
+                                <items1 module="reports">
+                                    <title>Sales Tax</title>
+                                    <sort_order>0</sort_order>
+                                    <action>newreports/adminhtml_salesreport/product</action>
+                                </items1> 
+                                <items2 module="reports">
+                                    <title>Deposit Slip with date sort</title>
+                                    <sort_order>1</sort_order>
+                                    <action>newreports/adminhtml_salesreport/product</action>
+                                </items2> 
+                            </children>  
+                    </accountingreports>
+                    
+                     
+                    <masterreports translate="title" module="reports">
+                        <title>Master Report </title> 
+                        <sort_order>0</sort_order>
+                            <children>
+                                <items1 module="reports">
+                                    <title>ALL website sales</title>
+                                    <sort_order>0</sort_order>
+                                    <action>newreports/adminhtml_salesreport/product</action>
+                                </items1> 
+                                <items2 module="reports">
+                                    <title>ALL Shopping Companies</title>
+                                    <sort_order>1</sort_order>
+                                    <action>newreports/adminhtml_salesreport/product</action>
+                                </items2> 
+                                <items3 module="reports">
+                                    <title>Affiliate Program</title>
+                                    <sort_order>2</sort_order>
+                                    <action>newreports/adminhtml_salesreport/product</action>
+                                </items3>
+                                <items4 module="reports">
+                                    <title>eBay</title>
+                                    <sort_order>3</sort_order>
+                                    <action>newreports/adminhtml_salesreport/product</action>
+                                </items4>
+                                <items5 module="reports">
+                                    <title>Amazon Seller Central</title>
+                                    <sort_order>4</sort_order>
+                                    <action>newreports/adminhtml_salesreport/product</action>
+                                </items5>
+                            </children>  
+                    </masterreports>
+                    -->    
+                    
+                </children>    
+            </report>     
+        </menu>
+         <acl>
+        <resources>
+            <admin>
+                <children>
+                    <report> 
+                        <children>
+                            <salesreports translate="title" module="newreports">
+                                <title>Sales Reports</title>
+                                <children>
+                                    <items1 translate="title">
+                                        <title>Product Reports</title> 
+                                        <children>
+                                            <items11 translate="title">
+                                                <title>Sales By Product</title> 
+                                            </items11>
+                                            <items12 translate="title">
+                                                <title>Products Sold by Range</title> 
+                                            </items12>
+                                        </children>  
+                                    </items1>
+                                    <items2 translate="title">
+                                        <title>Sales/Invoice Per Order</title>
+                                    </items2>
+                                    <items3 translate="title">
+                                        <title>Sales Per Customer</title>
+                                    </items3>
+                                    <items4 translate="title">
+                                        <title>Sales Per Sales Person</title>
+                                    </items4>
+                                    <items5 translate="title">
+                                        <title>Sales Tax</title>
+                                    </items5>
+                                     <items6 translate="title">
+                                        <title>Ship Today / Insurance / Upgrade Report</title>
+                                    </items6>
+                                </children>
+                            </salesreports>
+                        </children>
+                    </report>
+                    <system>
+                        <children>
+                            <config>
+                                <children>
+                                    <reports translate="title" module="reports">
+                                        <title>Reports</title>
+                                    </reports>
+                                </children>
+                            </config>
+                        </children>
+                    </system>
+                </children>
+            </admin>
+        </resources>
+    </acl>
+        <layout>
+            <updates>
+                <newreports>
+                    <file>newreports.xml</file>
+                </newreports>
+            </updates>
+        </layout>
+    </adminhtml>
+</config> 
